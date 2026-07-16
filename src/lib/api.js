@@ -64,6 +64,131 @@ export const bookingsAPI = {
   },
 }
 
+// ─── News / Updates ───
+export const newsAPI = {
+  getAll: async () => {
+    const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'))
+    const snap = await getDocs(q)
+    return { success: true, count: snap.size, items: snap.docs.map((d) => ({ _id: d.id, ...d.data() })) }
+  },
+
+  add: async (data) => {
+    const docRef = await addDoc(collection(db, 'news'), {
+      title: data.title,
+      slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      excerpt: data.excerpt || '',
+      content: data.content || '',
+      image: data.image || '',
+      category: data.category || 'general',
+      isPublished: data.isPublished !== false,
+      createdAt: serverTimestamp(),
+    })
+    return { success: true, item: { _id: docRef.id, ...data } }
+  },
+
+  update: async (id, data) => {
+    await updateDoc(doc(db, 'news', id), data)
+    return { success: true }
+  },
+
+  delete: async (id) => {
+    await deleteDoc(doc(db, 'news', id))
+    return { success: true }
+  },
+}
+
+// ─── Events / Functions ───
+export const eventsAPI = {
+  getAll: async () => {
+    const q = query(collection(db, 'events'), orderBy('createdAt', 'desc'))
+    const snap = await getDocs(q)
+    return { success: true, count: snap.size, items: snap.docs.map((d) => ({ _id: d.id, ...d.data() })) }
+  },
+
+  add: async (data) => {
+    const docRef = await addDoc(collection(db, 'events'), {
+      title: data.title,
+      slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      description: data.description || '',
+      date: data.date || '',
+      time: data.time || '',
+      location: data.location || '',
+      image: data.image || '',
+      category: data.category || 'event',
+      capacity: data.capacity || '',
+      contactEmail: data.contactEmail || '',
+      contactPhone: data.contactPhone || '',
+      isPublished: data.isPublished !== false,
+      createdAt: serverTimestamp(),
+    })
+    return { success: true, item: { _id: docRef.id, ...data } }
+  },
+
+  update: async (id, data) => {
+    await updateDoc(doc(db, 'events', id), data)
+    return { success: true }
+  },
+
+  delete: async (id) => {
+    await deleteDoc(doc(db, 'events', id))
+    return { success: true }
+  },
+}
+
+// ─── Menu Items ───
+export const menuAPI = {
+  getAll: async () => {
+    const q = query(collection(db, 'menuItems'), orderBy('createdAt', 'asc'))
+    const snap = await getDocs(q)
+    return { success: true, count: snap.size, items: snap.docs.map((d) => ({ _id: d.id, ...d.data() })) }
+  },
+
+  add: async (data) => {
+    const docRef = await addDoc(collection(db, 'menuItems'), {
+      name: data.name,
+      description: data.description || '',
+      section: data.section || 'mainCourse',
+      price: data.price || '',
+      dietary: data.dietary || [],
+      isAvailable: data.isAvailable !== false,
+      sortOrder: data.sortOrder || 0,
+      createdAt: serverTimestamp(),
+    })
+    return { success: true, item: { _id: docRef.id, ...data } }
+  },
+
+  update: async (id, data) => {
+    await updateDoc(doc(db, 'menuItems', id), data)
+    return { success: true }
+  },
+
+  delete: async (id) => {
+    await deleteDoc(doc(db, 'menuItems', id))
+    return { success: true }
+  },
+}
+
+// ─── Site Content (CMS) ───
+export const contentAPI = {
+  getAll: async () => {
+    const snap = await getDocs(collection(db, 'siteContent'))
+    const items = {}
+    snap.docs.forEach((d) => { items[d.id] = { _id: d.id, ...d.data() } })
+    return { success: true, items }
+  },
+
+  get: async (key) => {
+    const snap = await getDoc(doc(db, 'siteContent', key))
+    return snap.exists() ? { success: true, item: { _id: snap.id, ...snap.data() } } : { success: true, item: null }
+  },
+
+  set: async (key, data) => {
+    const { setDoc: fbSetDoc } = await import('firebase/firestore')
+    await fbSetDoc(doc(db, 'siteContent', key), { ...data, updatedAt: serverTimestamp() }, { merge: true })
+    return { success: true }
+  },
+}
+
 // ─── Contact / Messages ───
 export const contactAPI = {
   send: async (data) => {
@@ -212,4 +337,8 @@ export default {
   galleryAPI,
   messagesAPI,
   adminAPI,
+  newsAPI,
+  eventsAPI,
+  menuAPI,
+  contentAPI,
 }
