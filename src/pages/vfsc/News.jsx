@@ -35,6 +35,7 @@ export default function News() {
       <VideoHero
         title="News & Updates"
         subtitle="Stay in the loop with the latest happenings across the Victoria Falls Safari Collection."
+        poster="https://vfsc-umbraco.live.fireworkx.net/media/b5vlmnje/victoria-falls-safari-lodge-22.png"
         height="h-[50vh]"
         minHeight="min-h-[350px]"
         align="left"
