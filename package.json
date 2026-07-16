@@ -29,7 +29,8 @@
     "tailwind-merge": "^3.6.0",
     "class-variance-authority": "^0.7.1",
     "react-hot-toast": "^2.5.2",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.14",
+    "firebase": "^11.9.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
