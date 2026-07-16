@@ -61,12 +61,6 @@ export default function Dashboard() {
   const { user, logout, updateProfile, updatePassword } = useAuthStore();
   const [activeTab, setActiveTab] = useState('bookings');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (user?.role === 'admin') {
-      navigate('/admin', { replace: true });
-    }
-  }, [user, navigate]);
   const [bookings, setBookings] = useState([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [profileData, setProfileData] = useState({

@@ -64,7 +64,7 @@ export default function Register() {
     });
     setIsSubmitting(false);
     if (result.success) {
-      navigate('/dashboard');
+      navigate(result.role === 'admin' ? '/admin' : '/');
     } else {
       setServerError(result.error);
     }

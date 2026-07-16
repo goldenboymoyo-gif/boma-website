@@ -1,22 +1,38 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
+import { Menu, X, ChevronDown, ChevronRight, LogOut, User } from 'lucide-react'
 import { navLinks, topBarLinks, siteData } from '../data/siteData'
 import { cn } from '../lib/utils'
 import FallbackImage from './FallbackImage'
+import useAuthStore from '../store/authStore'
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [openMobileAccordion, setOpenMobileAccordion] = useState(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const hoverTimeoutRef = useRef(null)
+  const userMenuRef = useRef(null)
+  const { user, logout } = useAuthStore()
 
   useEffect(() => {
     setIsMobileOpen(false)
     setOpenMobileAccordion(null)
+    setShowUserMenu(false)
   }, [location])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     if (isMobileOpen) {
@@ -42,6 +58,17 @@ export default function Navbar() {
     setOpenMobileAccordion(openMobileAccordion === label ? null : label)
   }
 
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setShowUserMenu(false)
+  }
+
+  const getInitials = (name) => {
+    if (!name) return '??'
+    return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
+  }
+
   return (
     <>
       {/* Top Bar */}
@@ -60,24 +87,70 @@ export default function Navbar() {
             </Link>
           ))}
           <span className="w-px h-3 bg-white/20" />
-          <Link
-            to="/login"
-            className={cn(
-              'transition-colors duration-200 hover:text-white',
-              location.pathname === '/login' ? 'text-white' : ''
-            )}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className={cn(
-              'transition-colors duration-200 hover:text-white',
-              location.pathname === '/register' ? 'text-white' : ''
-            )}
-          >
-            Register
-          </Link>
+          {user ? (
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-2 transition-colors duration-200 hover:text-white"
+              >
+                <div className="w-5 h-5 rounded-full bg-boma-rust flex items-center justify-center text-[9px] font-bold text-white">
+                  {getInitials(user.name)}
+                </div>
+                <span className="max-w-[120px] truncate">{user.name || user.email}</span>
+              </button>
+              <AnimatePresence>
+                {showUserMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 z-50"
+                  >
+                    <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-1 min-w-[160px]">
+                      {user.role === 'admin' && (
+                        <Link
+                          to="/admin"
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-boma-charcoal hover:bg-boma-off-white/50 transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Admin Panel
+                        </Link>
+                      )}
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className={cn(
+                  'transition-colors duration-200 hover:text-white',
+                  location.pathname === '/login' ? 'text-white' : ''
+                )}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className={cn(
+                  'transition-colors duration-200 hover:text-white',
+                  location.pathname === '/register' ? 'text-white' : ''
+                )}
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -223,14 +296,33 @@ export default function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <div className="flex items-center gap-4 mt-2 pt-2 border-t border-gray-100">
-                  <Link to="/login" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
-                    Login
-                  </Link>
-                  <Link to="/register" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
-                    Register
-                  </Link>
-                </div>
+                {user ? (
+                  <div className="mt-2 pt-2 border-t border-gray-100">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 rounded-full bg-boma-rust flex items-center justify-center text-[9px] font-bold text-white">
+                        {getInitials(user.name)}
+                      </div>
+                      <span className="text-xs font-semibold text-boma-charcoal truncate">{user.name || user.email}</span>
+                    </div>
+                    {user.role === 'admin' && (
+                      <Link to="/admin" onClick={() => setIsMobileOpen(false)} className="block py-1.5 text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
+                        Admin Panel
+                      </Link>
+                    )}
+                    <button onClick={() => { handleLogout(); setIsMobileOpen(false) }} className="block py-1.5 text-xs font-semibold text-red-500 hover:text-red-500/80">
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4 mt-2 pt-2 border-t border-gray-100">
+                    <Link to="/login" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
+                      Login
+                    </Link>
+                    <Link to="/register" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
+                      Register
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <div className="flex-1 overflow-y-auto pt-2 px-6">

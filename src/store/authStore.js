@@ -45,14 +45,27 @@ const useAuthStore = create((set) => ({
     try {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
       await fbUpdateProfile(cred.user, { displayName: data.name })
-      await setDoc(doc(db, 'users', cred.user.uid), {
+      const userProfile = {
         name: data.name,
         email: data.email,
         phone: data.phone || '',
         role: 'user',
         createdAt: serverTimestamp(),
+      }
+      await setDoc(doc(db, 'users', cred.user.uid), userProfile)
+      set({
+        user: {
+          uid: cred.user.uid,
+          email: data.email,
+          name: data.name,
+          phone: data.phone || '',
+          role: 'user',
+          createdAt: new Date(),
+        },
+        userProfile,
+        loading: false,
       })
-      return { success: true }
+      return { success: true, role: 'user' }
     } catch (err) {
       const message = err.code === 'auth/email-already-in-use'
         ? 'An account with this email already exists'
@@ -63,8 +76,23 @@ const useAuthStore = create((set) => ({
 
   login: async (email, password) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-      return { success: true }
+      const cred = await signInWithEmailAndPassword(auth, email, password)
+      const profileDoc = await getDoc(doc(db, 'users', cred.user.uid))
+      const profile = profileDoc.exists() ? profileDoc.data() : {}
+      const role = profile.role || 'user'
+      set({
+        user: {
+          uid: cred.user.uid,
+          email: cred.user.email,
+          name: cred.user.displayName || profile.name || '',
+          phone: profile.phone || '',
+          role,
+          createdAt: profile.createdAt?.toDate?.() || cred.user.metadata.creationTime,
+        },
+        userProfile: profile,
+        loading: false,
+      })
+      return { success: true, role }
     } catch (err) {
       const message = err.code === 'auth/invalid-credential'
         ? 'Invalid email or password'

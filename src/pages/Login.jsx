@@ -45,7 +45,7 @@ export default function Login() {
     const result = await login(data.email, data.password);
     setIsSubmitting(false);
     if (result.success) {
-      navigate('/dashboard');
+      navigate(result.role === 'admin' ? '/admin' : '/');
     } else {
       setServerError(result.error);
     }
