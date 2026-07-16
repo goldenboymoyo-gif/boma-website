@@ -59,12 +59,21 @@ export const contactAPI = {
 export const galleryAPI = {
   getAll: (category) => api.get('/gallery', { params: { category } }),
   add: (data) => api.post('/gallery', data),
+  update: (id, data) => api.put(`/gallery/${id}`, data),
   delete: (id) => api.delete(`/gallery/${id}`),
+}
+
+// Contact/Messages API (admin)
+export const messagesAPI = {
+  getAll: () => api.get('/contact'),
+  markRead: (id) => api.put(`/contact/${id}/read`),
+  delete: (id) => api.delete(`/contact/${id}`),
 }
 
 // Admin API
 export const adminAPI = {
   getDashboard: () => api.get('/admin/dashboard'),
-  getBookings: () => api.get('/admin/bookings'),
+  getBookings: (page = 1, limit = 20) => api.get('/admin/bookings', { params: { page, limit } }),
   getCustomers: () => api.get('/admin/customers'),
+  updateBookingStatus: (id, status) => api.put(`/bookings/${id}/status`, { status }),
 }

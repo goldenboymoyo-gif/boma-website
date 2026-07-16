@@ -21,6 +21,7 @@ const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
 
 // VFSC Pages
 const VfscDetailPage = lazy(() => import('./pages/vfsc/VfscDetailPage'))
@@ -40,7 +41,8 @@ function AppContent() {
   const location = useLocation()
   const isDashboard = location.pathname.startsWith('/dashboard') ||
     location.pathname.startsWith('/login') ||
-    location.pathname.startsWith('/register')
+    location.pathname.startsWith('/register') ||
+    location.pathname.startsWith('/admin')
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,6 +61,7 @@ function AppContent() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
 
             {/* VFSC Routes */}
             <Route path="/accommodation" element={<Accommodation />} />

@@ -65,4 +65,23 @@ router.delete('/:id', protect, authorize('admin'), async (req, res, next) => {
   }
 });
 
+router.put('/:id', protect, authorize('admin'), async (req, res, next) => {
+  try {
+    const { title, image, category, isFeatured } = req.body;
+    const update = {};
+    if (title !== undefined) update.title = title;
+    if (image !== undefined) update.image = image;
+    if (category !== undefined) update.category = category;
+    if (isFeatured !== undefined) update.isFeatured = isFeatured;
+
+    const item = await Gallery.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Gallery item not found' });
+    }
+    res.json({ success: true, item });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
