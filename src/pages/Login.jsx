@@ -58,6 +58,8 @@ export default function Login() {
         <img
           src="https://vfsc-umbraco.live.fireworkx.net/media/msce2wdw/victoria-falls-safari-lodge-2025-06-09t104012349.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-boma-charcoal/70 via-boma-charcoal/50 to-boma-charcoal/80" />

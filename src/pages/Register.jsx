@@ -77,6 +77,8 @@ export default function Register() {
         <img
           src="https://vfsc-umbraco.live.fireworkx.net/media/4xplgbfg/victoria-falls-safari-lodge-2025-06-09t111245846.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-boma-charcoal/70 via-boma-charcoal/50 to-boma-charcoal/80" />

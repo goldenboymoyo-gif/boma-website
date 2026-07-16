@@ -39,6 +39,7 @@ export default function VideoHero({
             muted
             loop
             playsInline
+            preload="auto"
           />
         ) : poster ? (
           <div

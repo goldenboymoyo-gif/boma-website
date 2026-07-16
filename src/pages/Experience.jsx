@@ -268,6 +268,8 @@ function CallToAction() {
         <img
           src="https://vfsc-umbraco.live.fireworkx.net/media/3buojz0t/victoria-falls-safari-lodge-6.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover opacity-10"
         />
         <div className="absolute inset-0 bg-boma-charcoal/80" />

@@ -261,6 +261,8 @@ export default function Entertainment() {
           <img
             src={galleryImages.find((img) => img.id === 9)?.src}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-boma-charcoal/80" />
