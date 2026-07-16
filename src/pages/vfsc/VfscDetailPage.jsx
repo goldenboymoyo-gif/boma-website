@@ -34,6 +34,7 @@ function HeroSection({ data }) {
               src={img}
               alt={`${data.title} ${i + 1}`}
               className="w-full h-full object-cover"
+              loading="eager"
             />
           </div>
         ))}

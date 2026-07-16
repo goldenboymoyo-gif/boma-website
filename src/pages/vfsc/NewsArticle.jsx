@@ -40,6 +40,7 @@ export default function NewsArticle() {
           src={article.image}
           alt={article.title}
           className="w-full h-full object-cover"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-boma-charcoal/80 via-boma-charcoal/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 max-w-4xl mx-auto">

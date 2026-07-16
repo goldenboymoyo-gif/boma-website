@@ -67,7 +67,7 @@ function HeroSection() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
           poster="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />

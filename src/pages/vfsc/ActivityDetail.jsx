@@ -40,6 +40,7 @@ export default function ActivityDetail() {
             src={activity.image}
             alt={activity.name}
             className="w-full h-full object-cover"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-boma-charcoal/60 via-boma-charcoal/30 to-boma-charcoal/90" />
         </div>

@@ -262,6 +262,8 @@ export default function Booking() {
                 src="/logos/logo-dark.png"
                 alt="The Boma"
                 className="w-full h-full object-contain"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <h2 className="text-2xl font-bold text-boma-charcoal mb-4">
