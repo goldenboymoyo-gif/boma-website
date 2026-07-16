@@ -1,80 +1,130 @@
 import { create } from 'zustand'
-import { authAPI } from '../lib/api'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile as fbUpdateProfile,
+  updatePassword as fbUpdatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+} from 'firebase/auth'
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { auth, db } from '../lib/firebase'
 
-const useAuthStore = create((set, get) => ({
+const useAuthStore = create((set) => ({
   user: null,
-  token: localStorage.getItem('token'),
+  userProfile: null,
   loading: true,
-  error: null,
 
-  initialize: async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      set({ loading: false })
-      return
-    }
+  initialize: () => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const profileDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
+        const profile = profileDoc.exists() ? profileDoc.data() : {}
+        set({
+          user: {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            name: firebaseUser.displayName || profile.name || '',
+            phone: profile.phone || '',
+            role: profile.role || 'user',
+            createdAt: profile.createdAt?.toDate?.() || firebaseUser.metadata.creationTime,
+          },
+          userProfile: profile,
+          loading: false,
+        })
+      } else {
+        set({ user: null, userProfile: null, loading: false })
+      }
+    })
+    return unsubscribe
+  },
+
+  register: async (data) => {
     try {
-      const { user } = await authAPI.getProfile()
-      set({ user, token, loading: false })
-    } catch {
-      localStorage.removeItem('token')
-      set({ user: null, token: null, loading: false })
+      const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
+      await fbUpdateProfile(cred.user, { displayName: data.name })
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        name: data.name,
+        email: data.email,
+        phone: data.phone || '',
+        role: 'user',
+        createdAt: serverTimestamp(),
+      })
+      return { success: true }
+    } catch (err) {
+      const message = err.code === 'auth/email-already-in-use'
+        ? 'An account with this email already exists'
+        : err.message
+      return { success: false, error: message }
     }
   },
 
   login: async (email, password) => {
-    set({ error: null })
     try {
-      const { token, user } = await authAPI.login({ email, password })
-      localStorage.setItem('token', token)
-      set({ user, token, error: null })
+      await signInWithEmailAndPassword(auth, email, password)
       return { success: true }
     } catch (err) {
-      const message = err.error || 'Login failed'
-      set({ error: message })
+      const message = err.code === 'auth/invalid-credential'
+        ? 'Invalid email or password'
+        : err.message
       return { success: false, error: message }
     }
   },
 
-  register: async (data) => {
-    set({ error: null })
-    try {
-      const { token, user } = await authAPI.register(data)
-      localStorage.setItem('token', token)
-      set({ user, token, error: null })
-      return { success: true }
-    } catch (err) {
-      const message = err.error || 'Registration failed'
-      set({ error: message })
-      return { success: false, error: message }
-    }
-  },
-
-  logout: () => {
-    localStorage.removeItem('token')
-    set({ user: null, token: null })
+  logout: async () => {
+    await signOut(auth)
+    set({ user: null, userProfile: null })
   },
 
   updateProfile: async (data) => {
     try {
-      const { user } = await authAPI.updateProfile(data)
-      set({ user })
+      const fbUser = auth.currentUser
+      if (!fbUser) return { success: false, error: 'Not authenticated' }
+
+      if (data.name && data.name !== fbUser.displayName) {
+        await fbUpdateProfile(fbUser, { displayName: data.name })
+      }
+
+      const userRef = doc(db, 'users', fbUser.uid)
+      const updates = {}
+      if (data.name) updates.name = data.name
+      if (data.email) updates.email = data.email
+      if (data.phone !== undefined) updates.phone = data.phone
+      await setDoc(userRef, updates, { merge: true })
+
+      const profileDoc = await getDoc(userRef)
+      const profile = profileDoc.data()
+      set((state) => ({
+        user: { ...state.user, name: data.name || state.user.name, email: data.email || state.user.email, phone: data.phone ?? state.user.phone },
+        userProfile: { ...state.userProfile, ...profile },
+      }))
+
       return { success: true }
     } catch (err) {
-      return { success: false, error: err.error || 'Update failed' }
+      return { success: false, error: err.message }
     }
   },
 
-  updatePassword: async (data) => {
+  updatePassword: async ({ currentPassword, newPassword }) => {
     try {
-      await authAPI.updatePassword(data)
+      const fbUser = auth.currentUser
+      if (!fbUser) return { success: false, error: 'Not authenticated' }
+
+      const credential = EmailAuthProvider.credential(fbUser.email, currentPassword)
+      await reauthenticateWithCredential(fbUser, credential)
+      await fbUpdatePassword(fbUser, newPassword)
       return { success: true }
     } catch (err) {
-      return { success: false, error: err.error || 'Password update failed' }
+      const message = err.code === 'auth/wrong-password'
+        ? 'Current password is incorrect'
+        : err.message
+      return { success: false, error: message }
     }
   },
 
-  clearError: () => set({ error: null }),
+  clearError: () => {},
 }))
 
 export default useAuthStore

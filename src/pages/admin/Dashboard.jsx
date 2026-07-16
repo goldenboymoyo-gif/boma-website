@@ -744,7 +744,7 @@ function GalleryTab() {
 }
 
 function SettingsTab() {
-  const { user } = useAuthStore()
+  const { user, updateProfile, updatePassword } = useAuthStore()
   const [profileData, setProfileData] = useState({ name: '', email: '', phone: '' })
   const [profileSaving, setProfileSaving] = useState(false)
   const [profileMsg, setProfileMsg] = useState('')

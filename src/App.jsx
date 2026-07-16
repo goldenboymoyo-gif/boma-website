@@ -113,7 +113,8 @@ export default function App() {
   const initialize = useAuthStore((s) => s.initialize)
 
   useEffect(() => {
-    initialize()
+    const unsubscribe = initialize()
+    return () => { if (typeof unsubscribe === 'function') unsubscribe() }
   }, [initialize])
 
   useEffect(() => {
