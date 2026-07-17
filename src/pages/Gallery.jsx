@@ -136,7 +136,7 @@ export default function Gallery() {
                         toggleLike(image.id)
                       }}
                       className={cn(
-                        'absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300',
+                        'absolute top-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300',
                         likedImages.includes(image.id)
                           ? 'bg-boma-rust text-white shadow-lg shadow-boma-rust/30'
                           : 'bg-white/80 text-boma-charcoal/60 hover:bg-white hover:text-boma-rust opacity-0 group-hover:opacity-100'
@@ -233,6 +233,7 @@ export default function Gallery() {
                   src={selectedImage.src}
                   alt={selectedImage.alt}
                   className="w-full max-h-[80vh] object-contain rounded-sm"
+                  loading="eager"
                 />
                 <div className="text-center mt-4">
                   <p className="text-white text-sm">{selectedImage.alt}</p>

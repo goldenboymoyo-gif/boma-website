@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
+import { Menu, X, ChevronDown, ChevronRight, LogOut, User } from 'lucide-react'
 import { navLinks, topBarLinks, siteData } from '../data/siteData'
 import { cn } from '../lib/utils'
 import FallbackImage from './FallbackImage'
@@ -11,15 +11,28 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [openMobileAccordion, setOpenMobileAccordion] = useState(null)
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   const hoverTimeoutRef = useRef(null)
+  const profileMenuRef = useRef(null)
   const { user, logout } = useAuthStore()
 
   useEffect(() => {
     setIsMobileOpen(false)
     setOpenMobileAccordion(null)
+    setShowProfileMenu(false)
   }, [location])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
+        setShowProfileMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     if (isMobileOpen) {
@@ -74,17 +87,9 @@ export default function Navbar() {
           ))}
           <span className="w-px h-3 bg-white/20" />
           {user ? (
-            <>
-              {user.role === 'admin' && (
-                <Link
-                  to="/admin"
-                  className="transition-colors duration-200 hover:text-white"
-                >
-                  Admin Panel
-                </Link>
-              )}
+            <div className="relative" ref={profileMenuRef}>
               <button
-                onClick={handleLogout}
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center gap-2 transition-colors duration-200 hover:text-white"
               >
                 <div className="w-5 h-5 rounded-full bg-boma-rust flex items-center justify-center text-[9px] font-bold text-white">
@@ -92,7 +97,48 @@ export default function Navbar() {
                 </div>
                 <span className="max-w-[120px] truncate">{user.name || user.email}</span>
               </button>
-            </>
+              <AnimatePresence>
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 z-50"
+                  >
+                    <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-1 min-w-[220px]">
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="font-semibold text-boma-charcoal text-sm">{user.name || 'User'}</p>
+                        <p className="text-xs text-boma-charcoal/60 truncate">{user.email}</p>
+                        {user.phone && (
+                          <p className="text-xs text-boma-charcoal/60 mt-0.5">{user.phone}</p>
+                        )}
+                        <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
+                          {user.role === 'admin' ? 'Administrator' : 'Member'}
+                        </span>
+                      </div>
+                      {user.role === 'admin' && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setShowProfileMenu(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-boma-charcoal hover:bg-gray-50 transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Admin Panel
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => { handleLogout(); setShowProfileMenu(false) }}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : (
             <>
               <Link
@@ -202,7 +248,7 @@ export default function Navbar() {
             {/* Mobile Toggle */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="lg:hidden relative w-10 h-10 flex items-center justify-center"
+              className="lg:hidden relative w-11 h-11 flex items-center justify-center"
               aria-label="Toggle menu"
             >
               {isMobileOpen ? (
@@ -234,7 +280,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-              className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white flex flex-col"
+              className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white flex flex-col safe-area-bottom"
             >
               <div className="px-6 py-5 border-b border-gray-200">
                 <FallbackImage
@@ -262,16 +308,23 @@ export default function Navbar() {
                 ))}
                 {user ? (
                   <div className="mt-2 pt-2 border-t border-gray-100">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-7 h-7 rounded-full bg-boma-rust flex items-center justify-center text-[10px] font-bold text-white">
+                        {getInitials(user.name)}
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-boma-charcoal">{user.name || 'User'}</p>
+                        <p className="text-[10px] text-boma-charcoal/60 truncate">{user.email}</p>
+                      </div>
+                    </div>
                     {user.role === 'admin' && (
                       <Link to="/admin" onClick={() => setIsMobileOpen(false)} className="block py-1.5 text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
                         Admin Panel
                       </Link>
                     )}
-                    <button onClick={() => { handleLogout(); setIsMobileOpen(false) }} className="flex items-center gap-2 py-1.5 text-xs font-semibold text-boma-charcoal/60 hover:text-boma-rust transition-colors">
-                      <div className="w-5 h-5 rounded-full bg-boma-rust flex items-center justify-center text-[9px] font-bold text-white">
-                        {getInitials(user.name)}
-                      </div>
-                      {user.name || user.email} — Logout
+                    <button onClick={() => { handleLogout(); setIsMobileOpen(false) }} className="flex items-center gap-1.5 py-1.5 text-xs font-semibold text-red-500 hover:text-red-500/80">
+                      <LogOut className="w-3 h-3" />
+                      Sign Out
                     </button>
                   </div>
                 ) : (
@@ -286,7 +339,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              <div className="flex-1 overflow-y-auto pt-2 px-6">
+              <div className="flex-1 overflow-y-auto scroll-touch pt-2 px-6">
                 {navLinks.map((link, i) => (
                   <motion.div
                     key={link.path}

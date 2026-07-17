@@ -20,8 +20,13 @@ const useAuthStore = create((set) => ({
   initialize: () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const profileDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
-        const profile = profileDoc.exists() ? profileDoc.data() : {}
+        let profile = {}
+        try {
+          const profileDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
+          profile = profileDoc.exists() ? profileDoc.data() : {}
+        } catch {
+          profile = {}
+        }
         set({
           user: {
             uid: firebaseUser.uid,

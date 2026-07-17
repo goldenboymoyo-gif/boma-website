@@ -212,6 +212,7 @@ function FaqSection({ faqs }) {
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="flex items-center justify-between w-full p-5 text-left"
+                aria-expanded={openIndex === i}
               >
                 <span className="text-sm text-white/90 font-medium pr-4">{faq.q}</span>
                 {openIndex === i ? (

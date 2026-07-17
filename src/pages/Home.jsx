@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
@@ -56,20 +56,51 @@ function FadeIn({ children, className, delay = 0, direction = 'up' }) {
 
 /* ─── HERO ─── */
 function HeroSection() {
+  const [useVideo, setUseVideo] = useState(true)
+  const [videoLoaded, setVideoLoaded] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setUseVideo(window.innerWidth >= 768)
+  }, [])
+
   return (
-    <section className="relative w-full h-screen min-h-[600px] flex items-center overflow-hidden">
+    <section className="relative w-full min-h-[600px] flex items-center overflow-hidden" style={{ height: '100dvh', minHeight: '600px' }}>
       {/* Video */}
       <div className="absolute inset-0">
-        <video
-          src={siteData.heroVideo}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="none"
-          poster="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
-        />
+        {useVideo ? (
+          <video
+            src={siteData.heroVideo}
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onLoadedData={() => setVideoLoaded(true)}
+          />
+        ) : (
+          <img
+            src="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
+            alt="The Boma Dinner and Drum Show venue"
+            className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+        )}
+
+        {/* Show poster while video loads */}
+        {!videoLoaded && useVideo && (
+          <img
+            src="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover -z-[1]"
+            loading="eager"
+            decoding="async"
+          />
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />
       </div>
 
@@ -591,7 +622,7 @@ function GalleryPreviewSection() {
                   toggleLike(img.id)
                 }}
                 className={cn(
-                  'absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300',
+                  'absolute top-2.5 right-2.5 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300',
                   likedImages.includes(img.id)
                     ? 'bg-boma-rust text-white shadow-lg shadow-boma-rust/30'
                     : 'bg-white/80 text-boma-charcoal/60 hover:bg-white hover:text-boma-rust opacity-0 group-hover:opacity-100'
@@ -696,6 +727,7 @@ function FAQPreviewSection() {
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className="w-full flex items-center justify-between py-4 text-left"
+                  aria-expanded={openIndex === i}
                 >
                   <span className="font-semibold text-boma-charcoal text-sm pr-4">
                     {faq.question}

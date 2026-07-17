@@ -186,6 +186,7 @@ function FaqItem({ faq }) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-5 text-left"
+        aria-expanded={isOpen}
       >
         <span className="text-boma-charcoal font-medium pr-4">{faq.q}</span>
         {isOpen ? (

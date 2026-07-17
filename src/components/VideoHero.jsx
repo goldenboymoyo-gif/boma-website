@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { cn } from '../lib/utils'
 
@@ -19,6 +19,13 @@ export default function VideoHero({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
+  const [useVideo, setUseVideo] = useState(true)
+  const [videoLoaded, setVideoLoaded] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setUseVideo(window.innerWidth >= 768)
+  }, [])
 
   const contentAlign = {
     center: 'text-center items-center',
@@ -28,9 +35,9 @@ export default function VideoHero({
 
   return (
     <section ref={ref} className={cn('relative flex items-center overflow-hidden', height, minHeight)}>
-      {/* Video Background */}
+      {/* Video / Poster Background */}
       <div className="absolute inset-0">
-        {showVideo ? (
+        {showVideo && useVideo ? (
           <video
             src={video}
             poster={poster}
@@ -39,14 +46,30 @@ export default function VideoHero({
             muted
             loop
             playsInline
-            preload="none"
+            preload="metadata"
+            onLoadedData={() => setVideoLoaded(true)}
           />
         ) : poster ? (
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${poster})` }}
+          <img
+            src={poster}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
           />
         ) : null}
+
+        {/* Show poster while video loads */}
+        {showVideo && useVideo && !videoLoaded && poster && (
+          <img
+            src={poster}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover -z-[1]"
+            loading="eager"
+            decoding="async"
+          />
+        )}
+
         <div className={cn('absolute inset-0 bg-gradient-to-b', overlay)} />
 
         {/* Subtle grain texture */}

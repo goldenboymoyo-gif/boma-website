@@ -548,7 +548,7 @@ export default function Booking() {
                             const val = Math.max(1, adults - 1);
                             setValue('adults', val, { shouldValidate: true });
                           }}
-                          className="w-10 h-10 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
+                          className="w-11 h-11 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
                         >
                           -
                         </button>
@@ -558,7 +558,7 @@ export default function Booking() {
                         <button
                           type="button"
                           onClick={() => setValue('adults', adults + 1, { shouldValidate: true })}
-                          className="w-10 h-10 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
+                          className="w-11 h-11 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
                         >
                           +
                         </button>
@@ -577,7 +577,7 @@ export default function Booking() {
                             setValue('children', val, { shouldValidate: true });
                             handleChildAges(val);
                           }}
-                          className="w-10 h-10 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
+                          className="w-11 h-11 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
                         >
                           -
                         </button>
@@ -591,7 +591,7 @@ export default function Booking() {
                             setValue('children', val, { shouldValidate: true });
                             handleChildAges(val);
                           }}
-                          className="w-10 h-10 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
+                          className="w-11 h-11 rounded-full border-2 border-boma-charcoal/20 flex items-center justify-center hover:border-boma-rust transition-colors text-lg"
                         >
                           +
                         </button>
@@ -930,7 +930,7 @@ export default function Booking() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto scroll-touch"
             >
               {/* Close button */}
               <button
@@ -1033,6 +1033,7 @@ export default function Booking() {
                       type="button"
                       onClick={() => setShowAuthPassword(!showAuthPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-boma-charcoal/40 hover:text-boma-charcoal"
+                      aria-label={showAuthPassword ? 'Hide password' : 'Show password'}
                     >
                       {showAuthPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>

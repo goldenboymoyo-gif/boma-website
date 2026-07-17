@@ -87,6 +87,7 @@ export default function FAQ() {
                     <button
                       onClick={() => toggle(index)}
                       className="w-full flex items-center gap-4 px-6 py-5 text-left"
+                      aria-expanded={isOpen}
                     >
                       <span
                         className={cn(

@@ -54,6 +54,11 @@
     background-color: var(--color-boma-rust);
     color: white;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-boma-rust);
+    outline-offset: 2px;
+  }
 }
 
 @layer components {
@@ -79,6 +84,10 @@
 
   .section-heading {
     @apply text-3xl md:text-4xl lg:text-5xl font-bold;
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
 
@@ -156,6 +165,28 @@ video[poster] {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Touch scrolling utility */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  video {
+    animation: none !important;
+  }
 }
 
 /* Toast animations */

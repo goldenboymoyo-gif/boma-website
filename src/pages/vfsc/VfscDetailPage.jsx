@@ -25,18 +25,22 @@ function HeroSection({ data }) {
     <section ref={ref} className="relative h-[70vh] min-h-[500px] flex items-end overflow-hidden">
       <div className="absolute inset-0">
         {images.map((img, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 transition-opacity duration-1000"
-            style={{ opacity: i === current ? 1 : 0 }}
-          >
-            <FallbackImage
-              src={img}
-              alt={`${data.title} ${i + 1}`}
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
-          </div>
+          i === current ? (
+            <motion.div
+              key={`active-${i}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="absolute inset-0"
+            >
+              <FallbackImage
+                src={img}
+                alt={`${data.title} ${i + 1}`}
+                className="w-full h-full object-cover"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </motion.div>
+          ) : null
         ))}
         <div className="absolute inset-0 bg-gradient-to-b from-boma-charcoal/60 via-boma-charcoal/30 to-boma-charcoal/90" />
       </div>
@@ -79,7 +83,7 @@ function SubNavigation({ items }) {
           initial={{ opacity: 0, y: 10 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex overflow-x-auto gap-1 py-3 scrollbar-hide"
+          className="flex overflow-x-auto gap-1 py-3 scrollbar-hide scroll-touch"
         >
           {items.map((item) =>
             item.isExternal ? (
