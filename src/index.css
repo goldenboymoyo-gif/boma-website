@@ -23,9 +23,19 @@
   --color-boma-gold: #C89A3B;
   --color-boma-cream: #FFF8EF;
 
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Butler', Georgia, serif;
-  --font-accent: 'Cormorant Garamond', Georgia, serif;
+  /* Booma palette — lingers structure, Booma colors */
+  --color-page-bg: #FFF8EF;
+  --color-ink: #4A3B2C;
+  --color-ink-strong: #2E1C13;
+  --color-taupe: #C89A3B;
+  --color-taupe-dark: #B65B24;
+  --color-select: #F5E8D1;
+
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-heading: 'Cinzel', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-overline: 'Cinzel', Georgia, serif;
 }
 
 @layer base {
@@ -35,10 +45,24 @@
     box-sizing: border-box;
   }
 
+  /* Lingers-style rem scaling at media breakpoints */
+  html {
+    font-size: 100%;
+  }
+  @media (max-width: 1024px) {
+    html { font-size: 93.75%; }
+  }
+  @media (max-width: 768px) {
+    html { font-size: 88%; }
+  }
+  @media (max-width: 480px) {
+    html { font-size: 81.25%; }
+  }
+
   body {
     font-family: var(--font-body);
-    color: var(--color-boma-charcoal);
-    background: var(--color-boma-off-white);
+    color: var(--color-ink);
+    background: var(--color-page-bg);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -46,34 +70,42 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: 400;
+    color: var(--color-ink-strong);
+    line-height: 1.15;
   }
 
+  .font-serif, .font-body { font-family: var(--font-serif); }
+  .font-overline { font-family: var(--font-overline); }
+
   ::selection {
-    background-color: var(--color-boma-rust);
-    color: white;
+    background-color: var(--color-select);
+    color: var(--color-ink-strong);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-boma-rust);
+    outline: 2px solid var(--color-taupe-dark);
     outline-offset: 2px;
   }
+
+  a { color: inherit; }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-boma-rust text-white font-semibold transition-all duration-300 hover:bg-boma-rust-dark hover:shadow-lg hover:shadow-boma-rust/25 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
-    font-family: var(--font-body);
-    letter-spacing: 0.05em;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 bg-boma-rust text-white transition-all duration-300 hover:bg-boma-rust-dark hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
+    font-family: var(--font-overline);
+    font-weight: 400;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-size: 0.8125rem;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-boma-rust text-boma-rust font-semibold transition-all duration-300 hover:bg-boma-rust hover:text-white hover:shadow-lg hover:shadow-boma-rust/25 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
-    font-family: var(--font-body);
-    letter-spacing: 0.05em;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 border border-boma-rust text-boma-rust transition-all duration-300 hover:bg-boma-rust hover:text-white hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
+    font-family: var(--font-overline);
+    font-weight: 400;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-size: 0.8125rem;
   }
@@ -83,22 +115,31 @@
   }
 
   .section-heading {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold;
+    @apply text-3xl md:text-4xl lg:text-5xl;
   }
 
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+
+  /* Lingers-style overline section kicker */
+  .kicker {
+    font-family: var(--font-overline);
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-taupe-dark);
+  }
 }
 
 /* Swiper */
 .swiper-pagination-bullet-active {
-  background-color: var(--color-boma-rust) !important;
+  background-color: var(--color-taupe-dark) !important;
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: var(--color-boma-rust) !important;
+  color: var(--color-taupe-dark) !important;
 }
 
 /* Scrollbar */
@@ -107,16 +148,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-boma-charcoal);
+  background: var(--color-page-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-boma-rust-dark);
+  background: var(--color-taupe);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-boma-rust);
+  background: var(--color-taupe-dark);
 }
 
 /* Lenis */
@@ -200,3 +241,87 @@ video[poster] {
 }
 .animate-enter { animation: enter 0.25s ease-out; }
 .animate-leave { animation: leave 0.2s ease-in forwards; }
+
+/* Lingers-style slow Ken Burns zoom for photographic page headers */
+@keyframes boma-ken-burns {
+  0% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+.animate-ken-burns {
+  animation: boma-ken-burns 9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* Transparent-to-solid header, matching lingers.it's scroll behaviour */
+.site-header {
+  transition: background-color 0.5s ease, box-shadow 0.5s ease, backdrop-filter 0.5s ease;
+}
+
+/* ============ Lingers-inspired module styles ============ */
+
+/* Overlay menu (full-screen) */
+.overlay-menu {
+  background-color: rgba(255, 248, 239, 0.985);
+  backdrop-filter: blur(8px);
+}
+.overlay-menu .overlay-link {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  color: var(--color-ink-strong);
+  letter-spacing: 0.04em;
+  transition: color 0.3s ease;
+}
+.overlay-menu .overlay-link:hover {
+  color: var(--color-boma-rust);
+}
+.overlay-menu .overlay-num {
+  color: var(--color-taupe);
+  letter-spacing: 0.1em;
+}
+
+/* TextPic deko underscore */
+.deko-line {
+  display: inline-block;
+  width: 3.5rem;
+  height: 1px;
+  background: var(--color-taupe);
+  vertical-align: middle;
+}
+
+/* Lingers-style quote break */
+.quote-break-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Footer */
+.site-footer {
+  background: #2E1C13;
+  color: #E9DCC8;
+}
+.site-footer a { transition: color 0.3s ease; }
+.site-footer a:hover { color: #fff; }
+.site-footer .footer-heading {
+  font-family: var(--font-overline);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  color: #C89A3B;
+}
+
+/* Quick request bar */
+.quick-request {
+  background: #fff;
+  border: 1px solid var(--color-taupe);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero scroll cue */
+.scroll-cue {
+  animation: scrollCue 2.2s ease-in-out infinite;
+}
+@keyframes scrollCue {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(8px); opacity: 0.3; }
+}

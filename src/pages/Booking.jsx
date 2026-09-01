@@ -320,6 +320,8 @@ export default function Booking() {
       <VideoHero
         title="Book Your Experience"
         subtitle="Secure your spot for an unforgettable evening of African cuisine, culture and entertainment."
+        poster="https://vfsc-umbraco.live.fireworkx.net/media/szwp0utz/the-boma-dinner-drum-show-9.png"
+        showVideo={false}
         height="h-[45vh]"
         minHeight="min-h-[350px]"
         align="center"

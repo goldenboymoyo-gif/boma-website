@@ -7,3 +7,6 @@ server/node_modules
 server/.env
 *.log
 .DS_Store
+
+# Reference-only scrape of lingers.it (design/animation reference, not shipped)
+www.lingers.it

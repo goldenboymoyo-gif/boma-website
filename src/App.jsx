@@ -5,6 +5,7 @@ import Lenis from 'lenis'
 import { Toaster } from 'react-hot-toast'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import QuickRequest from './components/QuickRequest'
 import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './components/ProtectedRoute'
 import useAuthStore from './store/authStore'
@@ -41,6 +42,7 @@ function AppContent() {
   const isDashboard = location.pathname.startsWith('/login') ||
     location.pathname.startsWith('/register') ||
     location.pathname.startsWith('/admin')
+  const showQuickRequest = !isDashboard && location.pathname !== '/booking'
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -90,6 +92,7 @@ function AppContent() {
         </Suspense>
       </main>
       {!isDashboard && <Footer />}
+      {showQuickRequest && <QuickRequest />}
       <Toaster
         position="top-right"
         toastOptions={{

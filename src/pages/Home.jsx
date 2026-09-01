@@ -25,6 +25,8 @@ import { siteData, highlights, experiences, testimonials, galleryImages, faqs, a
 import { useGalleryStore } from '../store/galleryStore'
 import SectionHeading from '../components/SectionHeading'
 import FallbackImage from '../components/FallbackImage'
+import QuoteBreak from '../components/QuoteBreak'
+import LinkBoxes from '../components/LinkBoxes'
 import { cn } from '../lib/utils'
 
 function useScrollReveal(amount = 0.2) {
@@ -111,7 +113,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-white/80 text-xs uppercase tracking-[0.35em] font-medium"
+            className="kicker !text-white/80"
           >
             Victoria Falls, Zimbabwe
           </motion.span>
@@ -120,8 +122,8 @@ function HeroSection() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mt-4 mb-3 leading-[0.95]"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mt-4 mb-3 leading-[0.95]"
+            style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
           >
             The Boma
           </motion.h1>
@@ -131,7 +133,7 @@ function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-xl sm:text-2xl md:text-3xl text-white/80 mb-2 italic"
-            style={{ fontFamily: 'var(--font-accent)' }}
+            style={{ fontFamily: 'var(--font-serif)' }}
           >
             Dinner & Drum Show
           </motion.p>
@@ -140,16 +142,16 @@ function HeroSection() {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="w-20 h-px bg-boma-rust mx-auto my-5"
+            className="w-20 h-px bg-white/50 mx-auto my-5"
           />
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-base sm:text-lg text-white/85 mb-8 max-w-xl mx-auto"
+            className="text-base sm:text-lg text-white/85 mb-8 max-w-xl mx-auto font-serif italic"
           >
-            Over a million guests have experienced the magic. Come see why they keep coming back.
+            Your place to feast, drum and linger beneath the African stars.
           </motion.p>
 
           <motion.div
@@ -170,6 +172,16 @@ function HeroSection() {
           >
               Our Experience
             </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 1 }}
+            className="mt-12 flex justify-center text-white/60"
+            aria-hidden
+          >
+            <ChevronDown className="w-6 h-6 scroll-cue" />
           </motion.div>
         </div>
       </div>
@@ -478,16 +490,12 @@ function PerformancesSection() {
           light
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-          {performances.map((perf, i) => (
-            <FadeIn key={perf.title} delay={i * 0.12}>
-              <div className="py-6 h-full">
-                <perf.icon className="w-6 h-6 text-boma-rust mb-4" />
-                <h3 className="text-lg font-bold text-white mb-2">{perf.title}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{perf.description}</p>
-              </div>
-            </FadeIn>
-          ))}
+        <div className="mt-4">
+          <LinkBoxes
+            items={performances.map((perf) => ({ icon: perf.icon, title: perf.title, description: perf.description }))}
+            columns={3}
+            light
+          />
         </div>
       </div>
     </section>
@@ -863,6 +871,11 @@ export default function Home() {
       <ExperienceOverviewSection />
       <TimelineSection />
       <PerformancesSection />
+      <QuoteBreak
+        image="https://vfsc-umbraco.live.fireworkx.net/media/fpoebmh2/the-boma-dinner-drum-show-6.png"
+        quote="The energy at The Boma is contagious! From the moment you arrive, you are immersed in African culture. The interactive drumming was the highlight."
+        attribution="Maria L. — New York, USA"
+      />
       <MenuPreviewSection />
       <GalleryPreviewSection />
       <TestimonialsSection />

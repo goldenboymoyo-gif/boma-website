@@ -3,6 +3,8 @@ import { Utensils, Music, Palette, Users, Star, Phone, Clock, ArrowRight, Sparkl
 import { experiences, siteData, timeline } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
 import SectionHeading from '../components/SectionHeading'
+import QuoteBreak from '../components/QuoteBreak'
+import LinkBoxes from '../components/LinkBoxes'
 import { useScrollReveal, useParallax } from '../hooks/useAnimations'
 import FallbackImage from '../components/FallbackImage'
 import { cn } from '../lib/utils'
@@ -25,6 +27,7 @@ function HeroBanner() {
       titleAccent="Experience"
       subtitle="A legendary fusion of mouth-watering cuisine, energetic dance, interactive drumming and traditional storytelling — an evening that stays with you long after you leave."
       poster="https://vfsc-umbraco.live.fireworkx.net/media/kaukkvg5/victoria-falls-safari-lodge-8.png"
+      showVideo={false}
     >
       <a href={siteData.bookingUrl} className="btn-primary">
         Book Your Evening
@@ -227,7 +230,7 @@ function TimelineItem({ item, index, isLeft }) {
 }
 
 function Highlights() {
-  const { ref, isInView } = useScrollReveal(0.1)
+  const { ref } = useScrollReveal(0.1)
 
   return (
     <section className="section-padding py-24 md:py-32 bg-boma-off-white">
@@ -237,22 +240,8 @@ function Highlights() {
           subtitle="An evening of culinary delights and cultural immersion"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-          {highlightsData.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group bg-white py-8 px-6 transition-all duration-500"
-            >
-              <item.icon className="w-7 h-7 text-boma-rust-dark mb-6" />
-              <h3 className="text-xl font-bold text-boma-charcoal mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                {item.title}
-              </h3>
-              <p className="text-boma-charcoal/70 leading-relaxed text-sm">{item.description}</p>
-            </motion.div>
-          ))}
+        <div className="mt-16">
+          <LinkBoxes items={highlightsData} columns={3} />
         </div>
       </div>
     </section>
@@ -318,6 +307,11 @@ export default function Experience() {
     <main>
       <HeroBanner />
       <Introduction />
+      <QuoteBreak
+        image="https://vfsc-umbraco.live.fireworkx.net/media/sq1pars5/welcoming-guests-to-the-boma-dinner-drum-show.jpg"
+        quote="An absolutely magical evening! The drumming show was incredible and the food was outstanding. A must-do when visiting Victoria Falls."
+        attribution="Sarah M. — London, UK"
+      />
       <Timeline />
       <Highlights />
       <CallToAction />

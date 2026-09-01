@@ -3,6 +3,7 @@ import { Leaf, AlertTriangle, Phone, ArrowRight, Info } from 'lucide-react'
 import { menuItems, siteData } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
 import SectionHeading from '../components/SectionHeading'
+import QuoteBreak from '../components/QuoteBreak'
 import { useScrollReveal } from '../hooks/useAnimations'
 import { cn } from '../lib/utils'
 import { Link } from 'react-router-dom'
@@ -29,6 +30,7 @@ function HeroBanner() {
       titleAccent="Menu"
       subtitle="A four-course feast of local and international cuisine — from the Boma Braai and campfire to a decadent dessert buffet."
       poster="https://vfsc-umbraco.live.fireworkx.net/media/1i2nzih5/victoria-falls-safari-lodge-13.png"
+      showVideo={false}
     >
       <a href="#menu" className="btn-primary">
         Explore the Menu
@@ -292,6 +294,11 @@ export default function Menu() {
     <main>
       <HeroBanner />
       <Introduction />
+      <QuoteBreak
+        image="https://vfsc-umbraco.live.fireworkx.net/media/zhvikcgu/the-boma-dinner-drum-show-8.png"
+        quote="A feast that bombards the senses with the tastes, sights and sounds of Africa."
+        attribution="The Boma"
+      />
       <MenuSections />
       <KosherNotice />
       <BookingCTA />

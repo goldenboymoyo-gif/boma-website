@@ -1,10 +1,12 @@
 ﻿import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Music, Users, BookOpen, ChevronRight, Clock, Sparkles, ArrowRight } from 'lucide-react'
+import { Music, Users, BookOpen, ChevronRight, Clock, Sparkles, ArrowRight, Eye, Scissors, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { siteData, timeline, experiences, galleryImages } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
 import SectionHeading from '../components/SectionHeading'
+import QuoteBreak from '../components/QuoteBreak'
+import LinkBoxes from '../components/LinkBoxes'
 import { useScrollReveal } from '../hooks/useAnimations'
 import FallbackImage from '../components/FallbackImage'
 import { cn } from '../lib/utils'
@@ -61,6 +63,46 @@ const whatToExpect = [
   },
 ]
 
+
+const aroundTheBoma = [
+  {
+    icon: Eye,
+    title: 'Fortune Teller',
+    description: 'Have your fortune read for a playful glimpse into what the future might hold.',
+  },
+  {
+    icon: Scissors,
+    title: 'Hair Braiding',
+    description: 'Local braiders offer traditional styles right at your table throughout the evening.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Folk Storyteller',
+    description: 'Ancient Shona and Ndebele tales, shared fireside between courses.',
+  },
+  {
+    icon: ShoppingBag,
+    title: 'Crafters & Curios',
+    description: 'Carvers, artists and photographers sell handmade African crafts and keepsakes.',
+  },
+]
+
+function AroundTheBomaSection() {
+  return (
+    <section className="py-24 bg-boma-off-white">
+      <div className="max-w-7xl mx-auto section-padding">
+        <SectionHeading
+          title="Around The Boma"
+          subtitle="Beyond the drumming and dance, there is always something more to discover"
+        />
+        <div className="mt-4">
+          <LinkBoxes items={aroundTheBoma} columns={4} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function Entertainment() {
   const [activeTimelineIndex, setActiveTimelineIndex] = useState(0)
   const { ref: featuresRef, isInView: featuresInView } = useScrollReveal()
@@ -74,6 +116,7 @@ export default function Entertainment() {
         title="Entertainment"
         subtitle="An explosion of rhythm, colour and tradition that will leave your heart racing and your spirit soaring."
         poster="https://vfsc-umbraco.live.fireworkx.net/media/3buojz0t/victoria-falls-safari-lodge-6.png"
+        showVideo={false}
         height="h-[70vh]"
         minHeight="min-h-[500px]"
         align="left"
@@ -131,6 +174,13 @@ export default function Entertainment() {
           </div>
         </div>
       </section>
+
+      {/* Quote break */}
+      <QuoteBreak
+        image="https://vfsc-umbraco.live.fireworkx.net/media/cspnxngk/untitled-design-8.png"
+        quote="We celebrated our anniversary here and it was unforgettable. The cultural experience combined with the delicious food made it a highlight of our trip."
+        attribution="James K. — Sydney, Australia"
+      />
 
       {/* Timeline */}
       <section className="py-24 bg-boma-charcoal relative overflow-hidden">
@@ -215,6 +265,8 @@ export default function Entertainment() {
           </div>
         </div>
       </section>
+
+      <AroundTheBomaSection />
 
       {/* What to Expect */}
       <section className="py-24 bg-boma-off-white" ref={expectRef}>

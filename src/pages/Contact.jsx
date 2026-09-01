@@ -80,6 +80,8 @@ export default function Contact() {
         badge="The Boma"
         title="Contact Us"
         subtitle="We'd love to hear from you. Whether it's a reservation, a question, or just a hello — we're here."
+        poster="https://vfsc-umbraco.live.fireworkx.net/media/acaf4oca/victoria-falls-safari-lodge.jpg"
+        showVideo={false}
         height="h-[60vh]"
         minHeight="min-h-[450px]"
         align="center"

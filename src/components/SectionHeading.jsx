@@ -10,31 +10,28 @@ export default function SectionHeading({ title, subtitle, center = true, light =
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.7 }}
         className="mb-4"
       >
         <div className={cn(
           'inline-flex items-center gap-3 mb-4',
           center && 'justify-center'
         )}>
-          <span className={cn('w-8 h-px', light ? 'bg-boma-rust/40' : 'bg-boma-rust')} />
-          <span className={cn(
-            'text-xs uppercase tracking-[0.3em] font-medium',
-            light ? 'text-boma-rust/70' : 'text-boma-rust-dark'
-          )}>
+          <span className={cn('w-8 h-px', light ? 'bg-white/40' : 'bg-taupe')} />
+          <span className={cn('kicker', light && '!text-white/70')}>
             The Boma
           </span>
-          <span className={cn('w-8 h-px', light ? 'bg-boma-rust/40' : 'bg-boma-rust')} />
+          <span className={cn('w-8 h-px', light ? 'bg-white/40' : 'bg-taupe')} />
         </div>
       </motion.div>
 
       <motion.h2
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.1 }}
+        transition={{ duration: 0.9, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
         className={cn(
           'section-heading',
-          light ? 'text-white' : 'text-boma-charcoal'
+          light ? 'text-white' : 'text-ink-strong'
         )}
       >
         {title}
@@ -44,11 +41,11 @@ export default function SectionHeading({ title, subtitle, center = true, light =
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
           className={cn(
-            'section-subheading mt-4',
+            'section-subheading mt-4 font-serif text-lg md:text-xl italic',
             center && 'mx-auto',
-            light ? 'text-white/80' : ''
+            light ? 'text-white/80' : 'text-ink'
           )}
         >
           {subtitle}

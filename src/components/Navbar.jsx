@@ -1,62 +1,54 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, ChevronRight, LogOut, User } from 'lucide-react'
-import { navLinks, topBarLinks, siteData } from '../data/siteData'
+import { Menu, X, Phone, LogOut, User } from 'lucide-react'
+import { siteData } from '../data/siteData'
 import { cn } from '../lib/utils'
 import FallbackImage from './FallbackImage'
 import useAuthStore from '../store/authStore'
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from './SocialIcons'
+
+const bomaLinks = [
+  { label: 'Home', path: '/' },
+  { label: 'The Experience', path: '/experience' },
+  { label: 'Menu', path: '/menu' },
+  { label: 'Entertainment', path: '/entertainment' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'FAQ', path: '/faq' },
+  { label: 'Contact', path: '/contact' },
+]
+
+const estateLinks = [
+  { label: 'Victoria Falls Safari Collection', path: '/accommodation' },
+  { label: 'Wine & Dine', path: '/wine-and-dine' },
+  { label: 'Activities', path: '/activities' },
+  { label: 'Functions & Events', path: '/functions-and-events' },
+  { label: 'About Us', path: '/about-us' },
+  { label: 'News', path: '/news' },
+]
 
 export default function Navbar() {
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState(null)
-  const [openMobileAccordion, setOpenMobileAccordion] = useState(null)
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const hoverTimeoutRef = useRef(null)
-  const profileMenuRef = useRef(null)
   const { user, logout } = useAuthStore()
 
   useEffect(() => {
-    setIsMobileOpen(false)
-    setOpenMobileAccordion(null)
-    setShowProfileMenu(false)
+    setIsMenuOpen(false)
   }, [location])
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
-        setShowProfileMenu(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    const onScroll = () => setScrolled(window.scrollY > 60)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
-    if (isMobileOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [isMobileOpen])
-
-  const handleMouseEnter = (label) => {
-    clearTimeout(hoverTimeoutRef.current)
-    setOpenDropdown(label)
-  }
-
-  const handleMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setOpenDropdown(null)
-    }, 150)
-  }
-
-  const toggleMobileAccordion = (label) => {
-    setOpenMobileAccordion(openMobileAccordion === label ? null : label)
-  }
+  }, [isMenuOpen])
 
   const handleLogout = () => {
     logout()
@@ -68,369 +60,257 @@ export default function Navbar() {
     return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
   }
 
+  const solid = scrolled || isMenuOpen
+  const light = !solid
+
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-boma-charcoal text-white/80 text-xs hidden lg:block">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-end h-8 gap-6">
-          {topBarLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
+      {/* Fixed transparent header — lingers style: burger left, centered logo, quicklinks right */}
+      <header
+        className={cn(
+          'fixed top-0 inset-x-0 z-50 site-header py-3 md:py-4 px-5 md:px-10',
+          solid ? 'bg-white shadow-md' : 'bg-transparent'
+        )}
+      >
+        <div className="flex items-center justify-between">
+          {/* Left: burger + quicklinks */}
+          <div className="flex items-center gap-4 md:gap-6 w-1/3">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={cn(
-                'transition-colors duration-200 hover:text-white',
-                location.pathname === link.path ? 'text-white' : ''
+                'relative w-11 h-11 flex items-center justify-center transition-colors duration-300',
+                light ? 'text-white hover:text-white/70' : 'text-boma-charcoal hover:text-boma-rust'
               )}
+              aria-label="Toggle menu"
             >
-              {link.label}
-            </Link>
-          ))}
-          <span className="w-px h-3 bg-white/20" />
-          {user ? (
-            <div className="relative" ref={profileMenuRef}>
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center gap-2 transition-colors duration-200 hover:text-white"
-              >
-                <div className="w-5 h-5 rounded-full bg-boma-rust flex items-center justify-center text-[9px] font-bold text-white">
-                  {getInitials(user.name)}
-                </div>
-                <span className="max-w-[120px] truncate">{user.name || user.email}</span>
-              </button>
-              <AnimatePresence>
-                {showProfileMenu && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 z-50"
-                  >
-                    <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-1 min-w-[220px]">
-                      <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="font-semibold text-boma-charcoal text-sm">{user.name || 'User'}</p>
-                        <p className="text-xs text-boma-charcoal/60 truncate">{user.email}</p>
-                        {user.phone && (
-                          <p className="text-xs text-boma-charcoal/60 mt-0.5">{user.phone}</p>
-                        )}
-                        <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
-                          {user.role === 'admin' ? 'Administrator' : 'Member'}
-                        </span>
-                      </div>
-                      {user.role === 'admin' && (
-                        <Link
-                          to="/admin"
-                          onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-boma-charcoal hover:bg-gray-50 transition-colors"
-                        >
-                          <User className="w-4 h-4" />
-                          Admin Panel
-                        </Link>
-                      )}
-                      <button
-                        onClick={() => { handleLogout(); setShowProfileMenu(false) }}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
-                      </button>
-                    </div>
+              <AnimatePresence mode="wait" initial={false}>
+                {isMenuOpen ? (
+                  <motion.div key="x" initial={{ opacity: 0, rotate: -45 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0, rotate: 45 }} transition={{ duration: 0.2 }}>
+                    <X size={24} />
+                  </motion.div>
+                ) : (
+                  <motion.div key="menu" initial={{ opacity: 0, rotate: 45 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0, rotate: -45 }} transition={{ duration: 0.2 }}>
+                    <Menu size={24} />
                   </motion.div>
                 )}
               </AnimatePresence>
+            </button>
+
+            {/* Quicklinks (desktop) */}
+            <div className="hidden lg:flex items-center gap-5">
+              <a
+                href={`tel:${siteData.phone}`}
+                className={cn(
+                  'hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
+                )}
+              >
+                <Phone size={14} />
+                {siteData.phone}
+              </a>
+              <Link
+                to="/gallery"
+                className={cn(
+                  'hidden md:inline-block text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
+                )}
+              >
+                Gallery
+              </Link>
             </div>
-          ) : (
-            <>
+          </div>
+
+          {/* Center: logo */}
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center" aria-label="The Boma home">
+            <FallbackImage
+              src={light ? siteData.logoLight : siteData.logoDark}
+              alt="The Boma – Dinner & Drum Show"
+              className="h-9 md:h-11 w-auto transition-opacity duration-500"
+            />
+          </Link>
+
+          {/* Right: language / user / CTA */}
+          <div className="flex items-center gap-3 md:gap-5 w-1/3 justify-end">
+            <Link
+              to="/booking"
+              className={cn(
+                'hidden md:inline-flex items-center gap-2 px-5 py-2 text-xs uppercase tracking-[0.14em] font-sans transition-all duration-300',
+                light
+                  ? 'bg-white/10 border border-white/40 text-white hover:bg-white hover:text-boma-charcoal backdrop-blur-sm'
+                  : 'bg-boma-charcoal text-white hover:bg-boma-rust'
+              )}
+            >
+              Book Now
+            </Link>
+
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => { if (!solid) return; }}
+                  className="flex items-center gap-2 transition-colors duration-300"
+                  aria-label="Account"
+                >
+                  <div className={cn(
+                    'w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors duration-300',
+                    light ? 'bg-white/10 border-white/40 text-white' : 'bg-boma-charcoal border-boma-charcoal text-white'
+                  )}>
+                    {getInitials(user.name)}
+                  </div>
+                </button>
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-taupe shadow-lg">
+                  <div className="px-4 py-3 border-b border-taupe/50">
+                    <p className="font-sans font-medium text-boma-charcoal text-sm">{user.name || 'User'}</p>
+                    <p className="font-sans text-xs text-boma-charcoal/60 truncate">{user.email}</p>
+                    {user.role === 'admin' && (
+                      <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-sans uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
+                        Administrator
+                      </span>
+                    )}
+                  </div>
+                  {user.role === 'admin' && (
+                    <Link to="/admin" className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-boma-charcoal hover:bg-page-bg transition-colors">
+                      <User className="w-4 h-4" />
+                      Admin Panel
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => { handleLogout(); }}
+                    className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
               <Link
                 to="/login"
                 className={cn(
-                  'transition-colors duration-200 hover:text-white',
-                  location.pathname === '/login' ? 'text-white' : ''
+                  'hidden sm:inline-block text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
                 )}
               >
                 Login
               </Link>
-              <Link
-                to="/register"
-                className={cn(
-                  'transition-colors duration-200 hover:text-white',
-                  location.pathname === '/register' ? 'text-white' : ''
-                )}
-              >
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-
-      <header className="sticky top-0 z-50 bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <FallbackImage
-              src={siteData.logoDark}
-              alt="The Boma – Dinner & Drum Show"
-              className="h-8 md:h-10 w-auto"
-            />
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <div
-                key={link.path}
-                className="relative"
-                onMouseEnter={() => link.children && handleMouseEnter(link.label)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <Link
-                  to={link.path}
-                  className={cn(
-                    'flex items-center gap-1 px-3 py-2 text-sm font-semibold transition-colors duration-200 rounded-md',
-                    location.pathname === link.path || (link.children && location.pathname.startsWith(link.path))
-                      ? 'text-boma-rust'
-                      : 'text-boma-charcoal hover:text-boma-rust',
-                    link.highlight && 'text-boma-rust hover:text-boma-rust-dark'
-                  )}
-                >
-                  {link.label}
-                  {link.children && <ChevronDown size={14} className={cn(
-                    'transition-transform duration-200',
-                    openDropdown === link.label && 'rotate-180'
-                  )} />}
-                </Link>
-
-                {/* Dropdown */}
-                <AnimatePresence>
-                  {link.children && openDropdown === link.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 pt-2"
-                      onMouseEnter={() => handleMouseEnter(link.label)}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[240px]">
-                        {link.children.map((child) => (
-                          <Link
-                            key={child.path}
-                            to={child.path}
-                            className={cn(
-                              'block px-4 py-2.5 text-sm transition-colors duration-200',
-                              location.pathname === child.path
-                                ? 'text-boma-rust bg-boma-off-white/50'
-                                : 'text-boma-charcoal hover:text-boma-rust hover:bg-boma-off-white/30'
-                            )}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </nav>
-
-          {/* Right Side */}
-          <div className="flex items-center gap-3">
-            <a
-              href="/booking"
-              className="hidden md:inline-flex items-center gap-2 px-5 py-2 bg-boma-rust text-white text-sm font-semibold uppercase hover:opacity-80 transition-opacity"
-            >
-              Book Now
-            </a>
-
-            {/* Mobile Toggle */}
-            <button
-              onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="lg:hidden relative w-11 h-11 flex items-center justify-center"
-              aria-label="Toggle menu"
-            >
-              {isMobileOpen ? (
-                <X size={22} className="text-boma-charcoal" />
-              ) : (
-                <Menu size={22} className="text-boma-charcoal" />
-              )}
-            </button>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Full-screen overlay menu */}
       <AnimatePresence>
-        {isMobileOpen && (
+        {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 lg:hidden"
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 overlay-menu"
           >
-            <div
-              className="absolute inset-0 bg-black/60"
-              onClick={() => setIsMobileOpen(false)}
-            />
-            <motion.nav
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-              className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white flex flex-col safe-area-bottom"
-            >
-              <div className="px-6 py-5 border-b border-gray-200">
-                <FallbackImage
-                  src={siteData.logoDark}
-                  alt="The Boma"
-                  className="h-8 w-auto"
-                />
-              </div>
-
-              {/* Mobile Top Bar Links */}
-              <div className="px-6 py-3 border-b border-gray-100 bg-gray-50">
-                {topBarLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={cn(
-                      'block py-1.5 text-xs transition-colors duration-200',
-                      location.pathname === link.path
-                        ? 'text-boma-rust'
-                        : 'text-boma-charcoal/60 hover:text-boma-rust'
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                {user ? (
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-7 h-7 rounded-full bg-boma-rust flex items-center justify-center text-[10px] font-bold text-white">
-                        {getInitials(user.name)}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-boma-charcoal">{user.name || 'User'}</p>
-                        <p className="text-[10px] text-boma-charcoal/60 truncate">{user.email}</p>
-                      </div>
-                    </div>
-                    {user.role === 'admin' && (
-                      <Link to="/admin" onClick={() => setIsMobileOpen(false)} className="block py-1.5 text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
-                        Admin Panel
-                      </Link>
-                    )}
-                    <button onClick={() => { handleLogout(); setIsMobileOpen(false) }} className="flex items-center gap-1.5 py-1.5 text-xs font-semibold text-red-500 hover:text-red-500/80">
-                      <LogOut className="w-3 h-3" />
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-4 mt-2 pt-2 border-t border-gray-100">
-                    <Link to="/login" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
-                      Login
-                    </Link>
-                    <Link to="/register" className="text-xs font-semibold text-boma-rust hover:text-boma-rust/80">
-                      Register
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1 overflow-y-auto scroll-touch pt-2 px-6">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.path}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 + i * 0.04 }}
-                  >
-                    {link.children ? (
-                      <>
-                        <button
-                          onClick={() => toggleMobileAccordion(link.label)}
+            <div className="h-full overflow-y-auto scroll-touch pt-28 md:pt-32 pb-16 safe-area-bottom">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+                  {/* Main nav */}
+                  <nav className="flex flex-col">
+                    {bomaLinks.map((link, i) => (
+                      <motion.div
+                        key={link.path}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.08 + i * 0.06, duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                      >
+                        <Link
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
                           className={cn(
-                            'flex items-center justify-between w-full py-3.5 text-base font-semibold transition-colors duration-200 border-b border-gray-100',
-                            location.pathname === link.path || location.pathname.startsWith(link.path)
-                              ? 'text-boma-rust'
-                              : 'text-boma-charcoal hover:text-boma-rust'
+                            'group flex items-center gap-4 py-3.5 border-b border-taupe/40',
                           )}
                         >
-                          <span>{link.label}</span>
-                          <ChevronDown size={18} className={cn(
-                            'transition-transform duration-200',
-                            openMobileAccordion === link.label && 'rotate-180'
-                          )} />
-                        </button>
-                        <AnimatePresence>
-                          {openMobileAccordion === link.label && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="pl-4 pb-2">
-                                <Link
-                                  to={link.path}
-                                  className={cn(
-                                    'block py-2 text-sm transition-colors duration-200',
-                                    location.pathname === link.path
-                                      ? 'text-boma-rust'
-                                      : 'text-boma-charcoal/60 hover:text-boma-rust'
-                                  )}
-                                >
-                                  View All
-                                </Link>
-                                {link.children.map((child) => (
-                                  <Link
-                                    key={child.path}
-                                    to={child.path}
-                                    className={cn(
-                                      'block py-2 text-sm transition-colors duration-200',
-                                      location.pathname === child.path
-                                        ? 'text-boma-rust'
-                                        : 'text-boma-charcoal/60 hover:text-boma-rust'
-                                    )}
-                                  >
-                                    {child.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </>
-                    ) : (
-                      <Link
-                        to={link.path}
-                        className={cn(
-                          'block py-3.5 text-base font-semibold transition-colors duration-200 border-b border-gray-100',
-                          location.pathname === link.path
-                            ? 'text-boma-rust'
-                            : 'text-boma-charcoal hover:text-boma-rust',
-                          link.highlight && 'text-boma-rust'
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
+                          <span className="overlay-num text-[11px] font-sans">0{i + 1}</span>
+                          <span
+                            className={cn(
+                              'overlay-link text-2xl md:text-3xl',
+                              location.pathname === link.path ? 'text-boma-rust' : ''
+                            )}
+                          >
+                            {link.label}
+                          </span>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </nav>
 
-              <div className="px-6 pb-8">
-                <a
-                  href="/booking"
-                  className="block w-full text-center px-6 py-3 bg-boma-rust text-white text-sm font-semibold uppercase"
-                >
-                  Book Now
-                </a>
+                  {/* Side: estate links, contact, socials */}
+                  <div className="lg:pt-2">
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="kicker mb-5"
+                    >
+                      Victoria Falls Safari Collection
+                    </motion.p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.55, duration: 0.4 }}
+                      className="grid grid-cols-2 gap-x-6 gap-y-3"
+                    >
+                      {estateLinks.map((link) => (
+                        <Link
+                          key={link.path}
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="font-sans text-sm text-ink hover:text-boma-rust transition-colors"
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.65 }}
+                      className="mt-12"
+                    >
+                      <div className="h-px bg-taupe/60 mb-8" />
+                      <div className="flex items-center gap-3 mb-2 text-sm">
+                        <a href = {`tel:${siteData.phone}`} className="font-serif text-xl text-ink-strong hover:text-boma-rust transition-colors">
+                          {siteData.phone}
+                        </a>
+                      </div>
+                      <p className="font-sans text-sm text-ink mb-1">{siteData.address}</p>
+                      <a href={`mailto:${siteData.email}`} className="font-serif italic text-sm text-ink hover:text-boma-rust transition-colors">
+                        {siteData.email}
+                      </a>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.75 }}
+                      className="mt-10 flex flex-col sm:flex-row sm:items-center gap-6"
+                    >
+                      <Link to="/booking" onClick={() => setIsMenuOpen(false)} className="btn-primary">
+                        Book Your Evening
+                      </Link>
+                      <div className="flex items-center gap-4">
+                        <a href={siteData.social.facebook} target="_blank" rel="noopener noreferrer" className="text-ink hover:text-boma-rust transition-colors" aria-label="Facebook">
+                          <FacebookIcon size={20} />
+                        </a>
+                        <a href={siteData.social.instagram} target="_blank" rel="noopener noreferrer" className="text-ink hover:text-boma-rust transition-colors" aria-label="Instagram">
+                          <InstagramIcon size={20} />
+                        </a>
+                        <a href={siteData.social.youtube} target="_blank" rel="noopener noreferrer" className="text-ink hover:text-boma-rust transition-colors" aria-label="YouTube">
+                          <YoutubeIcon size={20} />
+                        </a>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
               </div>
-            </motion.nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

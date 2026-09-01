@@ -119,3 +119,16 @@ export const springTransition = {
   stiffness: 260,
   damping: 20,
 }
+
+/* Lingers-inspired slow, cinematic reveal (~1.4-2s, gentle deceleration) */
+export const cinematicReveal = {
+  initial: { opacity: 0, y: 60 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 1.4, ease: [0.19, 1, 0.22, 1] },
+}
+
+export const cinematicFade = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { duration: 2, ease: [0.19, 1, 0.22, 1] },
+}
