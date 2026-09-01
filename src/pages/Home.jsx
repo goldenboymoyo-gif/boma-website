@@ -59,7 +59,6 @@ function FadeIn({ children, className, delay = 0, direction = 'up' }) {
 /* ─── HERO ─── */
 function HeroSection() {
   const [useVideo, setUseVideo] = useState(true)
-  const [videoLoaded, setVideoLoaded] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -79,7 +78,6 @@ function HeroSection() {
             loop
             playsInline
             preload="metadata"
-            onLoadedData={() => setVideoLoaded(true)}
           />
         ) : (
           <img
@@ -89,17 +87,6 @@ function HeroSection() {
             loading="eager"
             decoding="async"
             fetchPriority="high"
-          />
-        )}
-
-        {/* Show poster while video loads */}
-        {!videoLoaded && useVideo && (
-          <img
-            src="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover -z-[1]"
-            loading="eager"
-            decoding="async"
           />
         )}
 
@@ -434,7 +421,7 @@ function TimelineItem({ item, index }) {
           <div className={cn('inline-flex items-center gap-2 mb-2', !isEven && 'justify-start', isEven && 'justify-end')}>
             <span className="text-boma-rust font-bold text-xs tracking-wider uppercase">{item.time}</span>
           </div>
-          <h3 className="text-lg font-bold text-boma-charcoal mt-1 group-hover:text-boma-rust transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>{item.event}</h3>
+          <h3 className="text-lg font-bold text-boma-charcoal mt-1 group-hover:text-boma-rust transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>{item.title}</h3>
           <p className="text-sm text-boma-charcoal/60 mt-1.5 leading-relaxed">{item.description}</p>
         </Link>
       </div>
@@ -447,10 +434,10 @@ function TimelineItem({ item, index }) {
       <div className="md:hidden flex items-start gap-3">
         <div className="flex-shrink-0 w-14 flex flex-col items-center z-10">
           <div className="w-3.5 h-3.5 rounded-full bg-boma-rust border-3 border-boma-off-white shadow-sm" />
-          <span className="text-boma-rust font-bold text-[10px] mt-1">{item.time}</span>
+          <span className="text-boma-rust font-bold text-sm mt-1">{item.time}</span>
         </div>
         <Link to="/experience" className="flex-1 bg-white py-3 px-4 transition-all duration-300 mb-3 group">
-          <h3 className="font-bold text-sm text-boma-charcoal group-hover:text-boma-rust transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>{item.event}</h3>
+          <h3 className="font-bold text-sm text-boma-charcoal group-hover:text-boma-rust transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>{item.title}</h3>
           <p className="text-xs text-boma-charcoal/60 mt-1 leading-relaxed">{item.description}</p>
         </Link>
       </div>

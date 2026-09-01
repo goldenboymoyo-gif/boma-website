@@ -21,7 +21,6 @@ export default function VideoHero({
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const [useVideo, setUseVideo] = useState(true)
-  const [videoLoaded, setVideoLoaded] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -41,14 +40,12 @@ export default function VideoHero({
         {showVideo && useVideo ? (
           <video
             src={video}
-            poster={poster}
             className="w-full h-full object-cover"
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
-            onLoadedData={() => setVideoLoaded(true)}
           />
         ) : poster ? (
           <img
@@ -59,17 +56,6 @@ export default function VideoHero({
             decoding="async"
           />
         ) : null}
-
-        {/* Show poster while video loads */}
-        {showVideo && useVideo && !videoLoaded && poster && (
-          <img
-            src={poster}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover -z-[1]"
-            loading="eager"
-            decoding="async"
-          />
-        )}
 
         <div className={cn('absolute inset-0 bg-gradient-to-b', overlay)} />
 
@@ -117,7 +103,7 @@ export default function VideoHero({
             {titleAccent && (
               <span className="block mt-4">
                 <span className="inline-block align-middle w-10 h-px bg-white/40 mr-4" />
-                <span className="text-[#C89A3B]" style={{ fontFamily: 'var(--font-serif)' }}>{titleAccent}</span>
+                <span className="text-[#C4BFB6]" style={{ fontFamily: 'var(--font-serif)' }}>{titleAccent}</span>
               </span>
             )}
           </motion.h1>

@@ -35,10 +35,10 @@ export default function Footer() {
           <div>
             <p className="footer-heading mb-2">Newsletter</p>
             <p className="font-serif text-2xl text-white mb-1">Stay in the know</p>
-            <p className="text-sm text-[#C9B899]">Evening events, menus and offers from The Boma.</p>
+            <p className="text-sm text-white/60">Evening events, menus and offers from The Boma.</p>
           </div>
           {subscribed ? (
-            <p className="font-serif italic text-lg text-[#C89A3B]">
+            <p className="font-serif italic text-lg text-[#C4BFB6]">
               Thank you — see you at The Boma.
             </p>
           ) : (
@@ -52,11 +52,11 @@ export default function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your e-mail address"
-                className="flex-1 bg-transparent border border-white/25 text-white placeholder:text-[#C9B899] px-4 py-3 font-sans text-sm focus:outline-none focus:border-white/60 transition-colors"
+                className="flex-1 bg-transparent border border-white/25 text-white placeholder:text-white/40 px-4 py-3 font-sans text-sm focus:outline-none focus:border-white/60 transition-colors"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-[#C89A3B] text-[#2E1C13] font-sans text-xs uppercase tracking-[0.18em] hover:bg-boma-rust hover:text-white transition-colors"
+                className="px-6 py-3 bg-white text-[#1C1A17] font-sans text-sm uppercase tracking-[0.18em] hover:bg-[#C4BFB6] hover:text-[#1C1A17] transition-colors"
               >
                 Subscribe
               </button>
@@ -80,13 +80,13 @@ export default function Footer() {
             A legendary African dining experience on the Victoria Falls Safari Lodge estate. Dinner, drumming and stories since 1992.
           </p>
           <div className="flex gap-3">
-            <a href={siteData.social.facebook} target="_blank" rel="noopener noreferrer" className="text-[#E9DCC8] hover:text-white transition-colors" aria-label="Facebook">
+            <a href={siteData.social.facebook} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors" aria-label="Facebook">
               <FacebookIcon size={20} />
             </a>
-            <a href={siteData.social.instagram} target="_blank" rel="noopener noreferrer" className="text-[#E9DCC8] hover:text-white transition-colors" aria-label="Instagram">
+            <a href={siteData.social.instagram} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors" aria-label="Instagram">
               <InstagramIcon size={20} />
             </a>
-            <a href={siteData.social.youtube} target="_blank" rel="noopener noreferrer" className="text-[#E9DCC8] hover:text-white transition-colors" aria-label="YouTube">
+            <a href={siteData.social.youtube} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors" aria-label="YouTube">
               <YoutubeIcon size={20} />
             </a>
           </div>
@@ -146,7 +146,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-sm hover:text-white transition-colors"
             >
-              <TripAdvisorIcon size={20} className="text-[#C89A3B]" />
+              <TripAdvisorIcon size={20} className="text-[#C4BFB6]" />
               <span>Read our reviews on TripAdvisor</span>
             </a>
           </div>
@@ -156,10 +156,10 @@ export default function Footer() {
       {/* Legal bottom */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#C9B899] text-center md:text-left">
+          <p className="text-sm text-white/60 text-center md:text-left">
             © {new Date().getFullYear()} The Boma – Dinner & Drum Show. Part of the Victoria Falls Safari Collection.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
             <Link to="/faq" className="hover:text-white transition-colors">Frequently Asked Questions</Link>
             <Link to="/travel-trade" className="hover:text-white transition-colors">Media & Travel Trade</Link>
             <Link to="/booking" className="hover:text-white transition-colors">Booking</Link>

@@ -7,29 +7,30 @@
 }
 
 @theme {
-  --color-boma-rust: #B65B24;
-  --color-boma-rust-light: #C89A3B;
-  --color-boma-rust-dark: #4A2D1A;
-  --color-boma-green: #2E1C13;
+  /* Neutral remap of the legacy boma-* aliases — lingers greys, no Booma colors */
+  --color-boma-rust: #8B8477;
+  --color-boma-rust-light: #B3ADA2;
+  --color-boma-rust-dark: #5C574E;
+  --color-boma-green: #1A1917;
   --color-boma-green-light: #222222;
   --color-boma-grey: #E6E6E6;
-  --color-boma-light-grey: #F5E8D1;
-  --color-boma-charcoal: #222222;
+  --color-boma-light-grey: #F2F2F2;
+  --color-boma-charcoal: #1C1A17;
   --color-boma-white: #FFFFFF;
-  --color-boma-off-white: #FFF8EF;
-  --color-boma-beige: #C89A3B;
-  --color-boma-ochre: #B65B24;
-  --color-boma-primary: #4A2D1A;
-  --color-boma-gold: #C89A3B;
-  --color-boma-cream: #FFF8EF;
+  --color-boma-off-white: #F7F7F7;
+  --color-boma-beige: #C4BFB6;
+  --color-boma-ochre: #8B8477;
+  --color-boma-primary: #1C1A17;
+  --color-boma-gold: #C4BFB6;
+  --color-boma-cream: #F7F7F7;
 
-  /* Booma palette — lingers structure, Booma colors */
-  --color-page-bg: #FFF8EF;
-  --color-ink: #4A3B2C;
-  --color-ink-strong: #2E1C13;
-  --color-taupe: #C89A3B;
-  --color-taupe-dark: #B65B24;
-  --color-select: #F5E8D1;
+  /* Lingers palette */
+  --color-page-bg: #F7F7F7;
+  --color-ink: #777162;
+  --color-ink-strong: #1C1A17;
+  --color-taupe: #C4BFB6;
+  --color-taupe-dark: #8B8477;
+  --color-select: #E8E5E0;
 
   --font-body: 'Cormorant Garamond', Georgia, serif;
   --font-heading: 'Cinzel', Georgia, serif;
@@ -93,21 +94,21 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 bg-boma-rust text-white transition-all duration-300 hover:bg-boma-rust-dark hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 bg-boma-charcoal text-white transition-all duration-300 hover:bg-black hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
     font-family: var(--font-overline);
     font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 border border-boma-rust text-boma-rust transition-all duration-300 hover:bg-boma-rust hover:text-white hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 border border-boma-charcoal text-boma-charcoal transition-all duration-300 hover:bg-boma-charcoal hover:text-white hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
     font-family: var(--font-overline);
     font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 
   .section-padding {
@@ -125,8 +126,8 @@
   /* Lingers-style overline section kicker */
   .kicker {
     font-family: var(--font-overline);
-    font-size: 0.75rem;
-    letter-spacing: 0.28em;
+    font-size: 0.85rem;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-taupe-dark);
   }
@@ -181,9 +182,9 @@ html.lenis, html.lenis body {
 .glass-gold {
   background: linear-gradient(
     135deg,
-    rgba(182, 91, 36, 0.05) 0%,
-    rgba(34, 34, 34, 0.95) 50%,
-    rgba(182, 91, 36, 0.03) 100%
+    rgba(28, 26, 23, 0.04) 0%,
+    rgba(28, 26, 23, 0.95) 50%,
+    rgba(28, 26, 23, 0.04) 100%
   );
   backdrop-filter: blur(20px);
 }
@@ -260,7 +261,7 @@ video[poster] {
 
 /* Overlay menu (full-screen) */
 .overlay-menu {
-  background-color: rgba(255, 248, 239, 0.985);
+  background-color: rgba(247, 247, 247, 0.985);
   backdrop-filter: blur(8px);
 }
 .overlay-menu .overlay-link {
@@ -271,10 +272,10 @@ video[poster] {
   transition: color 0.3s ease;
 }
 .overlay-menu .overlay-link:hover {
-  color: var(--color-boma-rust);
+  color: var(--color-taupe-dark);
 }
 .overlay-menu .overlay-num {
-  color: var(--color-taupe);
+  color: var(--color-taupe-dark);
   letter-spacing: 0.1em;
 }
 
@@ -297,8 +298,8 @@ video[poster] {
 
 /* Footer */
 .site-footer {
-  background: #2E1C13;
-  color: #E9DCC8;
+  background: #1C1A17;
+  color: #B9B2A6;
 }
 .site-footer a { transition: color 0.3s ease; }
 .site-footer a:hover { color: #fff; }
@@ -306,8 +307,8 @@ video[poster] {
   font-family: var(--font-overline);
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  font-size: 0.72rem;
-  color: #C89A3B;
+  font-size: 0.85rem;
+  color: #8B8477;
 }
 
 /* Quick request bar */

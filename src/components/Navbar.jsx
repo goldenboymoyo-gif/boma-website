@@ -101,17 +101,17 @@ export default function Navbar() {
               <a
                 href={`tel:${siteData.phone}`}
                 className={cn(
-                  'hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  'hidden md:inline-flex items-center gap-2 text-sm uppercase tracking-[0.14em] font-sans transition-colors duration-300',
                   light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
                 )}
               >
-                <Phone size={14} />
+                <Phone size={16} />
                 {siteData.phone}
               </a>
               <Link
                 to="/gallery"
                 className={cn(
-                  'hidden md:inline-block text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  'hidden md:inline-block text-sm uppercase tracking-[0.14em] font-sans transition-colors duration-300',
                   light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
                 )}
               >
@@ -134,10 +134,10 @@ export default function Navbar() {
             <Link
               to="/booking"
               className={cn(
-                'hidden md:inline-flex items-center gap-2 px-5 py-2 text-xs uppercase tracking-[0.14em] font-sans transition-all duration-300',
+                'hidden md:inline-flex items-center gap-2 px-5 py-2 text-sm uppercase tracking-[0.14em] font-sans transition-all duration-300',
                 light
                   ? 'bg-white/10 border border-white/40 text-white hover:bg-white hover:text-boma-charcoal backdrop-blur-sm'
-                  : 'bg-boma-charcoal text-white hover:bg-boma-rust'
+                  : 'bg-boma-charcoal text-white hover:bg-black'
               )}
             >
               Book Now
@@ -160,7 +160,7 @@ export default function Navbar() {
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-taupe shadow-lg">
                   <div className="px-4 py-3 border-b border-taupe/50">
                     <p className="font-sans font-medium text-boma-charcoal text-sm">{user.name || 'User'}</p>
-                    <p className="font-sans text-xs text-boma-charcoal/60 truncate">{user.email}</p>
+                    <p className="font-sans text-sm text-boma-charcoal/60 truncate">{user.email}</p>
                     {user.role === 'admin' && (
                       <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-sans uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
                         Administrator
@@ -186,7 +186,7 @@ export default function Navbar() {
               <Link
                 to="/login"
                 className={cn(
-                  'hidden sm:inline-block text-xs uppercase tracking-[0.14em] font-sans transition-colors duration-300',
+                  'hidden sm:inline-block text-sm uppercase tracking-[0.14em] font-sans transition-colors duration-300',
                   light ? 'text-white/90 hover:text-white' : 'text-boma-charcoal/70 hover:text-boma-rust'
                 )}
               >
@@ -226,7 +226,7 @@ export default function Navbar() {
                             'group flex items-center gap-4 py-3.5 border-b border-taupe/40',
                           )}
                         >
-                          <span className="overlay-num text-[11px] font-sans">0{i + 1}</span>
+                          <span className="overlay-num text-sm font-sans">0{i + 1}</span>
                           <span
                             className={cn(
                               'overlay-link text-2xl md:text-3xl',
@@ -261,7 +261,7 @@ export default function Navbar() {
                           key={link.path}
                           to={link.path}
                           onClick={() => setIsMenuOpen(false)}
-                          className="font-sans text-sm text-ink hover:text-boma-rust transition-colors"
+                          className="font-sans text-base text-ink hover:text-boma-rust transition-colors"
                         >
                           {link.label}
                         </Link>
@@ -280,8 +280,8 @@ export default function Navbar() {
                           {siteData.phone}
                         </a>
                       </div>
-                      <p className="font-sans text-sm text-ink mb-1">{siteData.address}</p>
-                      <a href={`mailto:${siteData.email}`} className="font-serif italic text-sm text-ink hover:text-boma-rust transition-colors">
+                      <p className="font-sans text-base text-ink mb-1">{siteData.address}</p>
+                      <a href={`mailto:${siteData.email}`} className="font-serif italic text-base text-ink hover:text-boma-rust transition-colors">
                         {siteData.email}
                       </a>
                     </motion.div>

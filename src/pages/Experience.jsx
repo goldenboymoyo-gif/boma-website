@@ -1,6 +1,6 @@
 ﻿import { motion } from 'framer-motion'
 import { Utensils, Music, Palette, Users, Star, Phone, Clock, ArrowRight, Sparkles, MapPin } from 'lucide-react'
-import { experiences, siteData, timeline } from '../data/siteData'
+import { experiences, siteData } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
 import SectionHeading from '../components/SectionHeading'
 import QuoteBreak from '../components/QuoteBreak'
@@ -8,7 +8,6 @@ import LinkBoxes from '../components/LinkBoxes'
 import { useScrollReveal, useParallax } from '../hooks/useAnimations'
 import FallbackImage from '../components/FallbackImage'
 import { cn } from '../lib/utils'
-import { Link } from 'react-router-dom'
 
 const highlightsData = [
   { icon: Utensils, title: 'Four-Course Dinner', description: 'A feast of local and international cuisine from the Boma Braai and campfire' },
@@ -116,21 +115,20 @@ function Introduction() {
 }
 
 function Timeline() {
-  const { ref: sectionRef, isInView: sectionInView } = useScrollReveal(0.1)
+  const { ref: sectionRef } = useScrollReveal(0.1)
 
   return (
-    <section id="timeline" className="section-padding py-24 md:py-32 bg-boma-charcoal relative overflow-hidden">
+    <section id="timeline" className="section-padding py-24 md:py-32 bg-white border-t border-taupe/40">
       <div ref={sectionRef} className="max-w-6xl mx-auto relative z-10">
         <SectionHeading
           title="Your Evening Unfolds"
           subtitle="From the moment you arrive to the final farewell, every moment is crafted for wonder"
-          light
         />
 
         <div className="relative mt-16">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-boma-rust/60 via-boma-rust/40 to-boma-rust/10 hidden lg:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-taupe/60 hidden lg:block" />
 
-          <div className="space-y-12 lg:space-y-0">
+          <div className="space-y-14 lg:space-y-0">
             {experiences.map((exp, i) => {
               const isLeft = i % 2 === 0
               return (
@@ -145,86 +143,54 @@ function Timeline() {
 }
 
 function TimelineItem({ item, index, isLeft }) {
-  const { ref, isInView } = useScrollReveal(0.2)
+  const { ref, isInView } = useScrollReveal(0.15)
 
   return (
-    <div ref={ref} className={cn('relative lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center lg:pb-16')}>
+    <div ref={ref} className="relative lg:grid lg:grid-cols-2 lg:items-center lg:gap-20 lg:pb-16">
+      {/* Center node */}
       <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="w-12 h-12 rounded-full bg-boma-charcoal border-2 border-boma-rust flex items-center justify-center"
-          >
-            <span className="text-boma-rust text-xs font-bold">{String(index + 1).padStart(2, '0')}</span>
-          </motion.div>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={isInView ? { scale: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="w-10 h-10 rounded-full bg-boma-charcoal border border-taupe flex items-center justify-center"
+        >
+          <span className="text-taupe text-sm font-semibold">{String(index + 1).padStart(2, '0')}</span>
+        </motion.div>
       </div>
 
-      {isLeft ? (
-        <>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7 }}
-            className="lg:text-right lg:pr-16 mb-8 lg:mb-0"
-          >
-            <div className="bg-white py-6 px-5 inline-block lg:ml-auto">
-              <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-boma-rust/10 border border-boma-rust/20">
-                <Clock className="w-3.5 h-3.5 text-boma-rust" />
-                <span className="text-boma-rust text-sm font-semibold">{item.time}</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-boma-charcoal mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                {item.title}
-              </h3>
-              <p className="text-boma-charcoal/60 leading-relaxed text-base">{item.description}</p>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="hidden lg:flex justify-start pl-16"
-          >
-            <div className="w-full h-32 bg-boma-grey/10 flex items-center justify-center">
-              <div className="text-boma-rust/20 text-sm tracking-widest uppercase">{item.time}</div>
-            </div>
-          </motion.div>
-        </>
-      ) : (
-        <>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="hidden lg:flex justify-end pr-16"
-          >
-            <div className="w-full h-32 bg-boma-grey/10 flex items-center justify-center">
-              <div className="text-boma-rust/20 text-sm tracking-widest uppercase">{item.time}</div>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7 }}
-            className="lg:pl-16 mb-8 lg:mb-0"
-          >
-            <div className="bg-white py-6 px-5">
-              <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-boma-rust/10 border border-boma-rust/20">
-                <Clock className="w-3.5 h-3.5 text-boma-rust" />
-                <span className="text-boma-rust text-sm font-semibold">{item.time}</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-boma-charcoal mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                {item.title}
-              </h3>
-              <p className="text-boma-charcoal/60 leading-relaxed text-base">{item.description}</p>
-            </div>
-          </motion.div>
-        </>
-      )}
+      {/* Text */}
+      <motion.div
+        initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7 }}
+        className={cn('mb-8 lg:mb-0', isLeft ? 'lg:pr-24' : 'lg:pl-24 lg:order-2')}
+      >
+        <div className={cn('bg-[#F1EFE9] border border-taupe/40 px-7 py-7', isLeft && 'lg:text-right')}>
+          <div className={cn('inline-flex items-center gap-3 mb-3', isLeft && 'lg:flex-row-reverse')}>
+            <span className="kicker">{item.time}</span>
+            <span className="deko-line" />
+          </div>
+          <h3 className="text-2xl md:text-3xl text-ink-strong mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+            {item.title}
+          </h3>
+          <p className="text-ink leading-relaxed text-base lg:text-lg">{item.description}</p>
+        </div>
+      </motion.div>
 
-      <div className="lg:hidden flex justify-center mt-4">
-        <div className="w-px h-6 bg-boma-rust/20" />
-      </div>
+      {/* Image */}
+      <motion.div
+        initial={{ opacity: 0, x: isLeft ? 40 : -40 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.1 }}
+        className={cn(isLeft ? 'lg:order-2 lg:pl-6' : 'lg:order-1 lg:pr-6')}
+      >
+        <FallbackImage
+          src={item.image}
+          alt={item.title}
+          className="w-full h-56 lg:h-56 object-cover"
+        />
+      </motion.div>
     </div>
   )
 }
