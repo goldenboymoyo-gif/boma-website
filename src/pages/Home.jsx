@@ -27,6 +27,7 @@ import SectionHeading from '../components/SectionHeading'
 import FallbackImage from '../components/FallbackImage'
 import QuoteBreak from '../components/QuoteBreak'
 import LinkBoxes from '../components/LinkBoxes'
+import BookDirectBanner from '../components/BookDirectBanner'
 import { cn } from '../lib/utils'
 
 function useScrollReveal(amount = 0.2) {
@@ -65,9 +66,14 @@ function HeroSection() {
     setUseVideo(window.innerWidth >= 768)
   }, [])
 
+  const scrollToContent = () => {
+    const next = document.getElementById('need-to-know')
+    if (next) next.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <section className="relative w-full min-h-[600px] flex items-center overflow-hidden" style={{ height: '100dvh', minHeight: '600px' }}>
-      {/* Video */}
+      {/* Background */}
       <div className="absolute inset-0">
         {useVideo ? (
           <video
@@ -90,40 +96,42 @@ function HeroSection() {
           />
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />
+        {/* Legibility scrim — keeps all hero text visible & clean over any frame */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-black/60" />
       </div>
 
       {/* Content overlay */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
         <div className="max-w-4xl text-center">
+          {/* Best-price / book-direct trust banner */}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="mb-8 flex justify-center"
+          >
+            <BookDirectBanner tone="light" className="max-w-3xl" />
+          </motion.div>
+
+          {/* "Your place to..." overline tagline */}
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="kicker !text-white/80"
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="kicker !text-white/85 block mb-3"
           >
-            Victoria Falls, Zimbabwe
+            Your place to feast, drum & linger
           </motion.span>
 
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.15 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mt-4 mb-3 leading-[0.95]"
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white mt-2 mb-4 leading-[0.95]"
             style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
           >
             The Boma
           </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-xl sm:text-2xl md:text-3xl text-white/80 mb-2 italic"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
-            Dinner & Drum Show
-          </motion.p>
 
           <motion.div
             initial={{ scaleX: 0 }}
@@ -133,12 +141,13 @@ function HeroSection() {
           />
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-base sm:text-lg text-white/85 mb-8 max-w-xl mx-auto font-serif italic"
+            className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto font-serif italic leading-relaxed"
           >
-            Your place to feast, drum and linger beneath the African stars.
+            A legendary fusion of Zimbabwean cuisine, cultural dance and interactive drumming,
+            served beneath the stars on the Victoria Falls Safari Lodge estate.
           </motion.p>
 
           <motion.div
@@ -147,31 +156,31 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a
-              href={siteData.bookingUrl}
-              className="btn-primary"
-            >
+            <a href={siteData.bookingUrl} className="btn-primary">
               Book Your Evening
             </a>
-          <Link
-            to="/experience"
-            className="btn-secondary !border-white !text-white hover:!bg-white hover:!text-boma-charcoal hover:shadow-lg hover:shadow-white/10 hover:-translate-y-0.5"
-          >
+            <Link
+              to="/experience"
+              className="btn-secondary !border-white !text-white hover:!bg-white hover:!text-boma-charcoal hover:shadow-lg hover:shadow-white/10 hover:-translate-y-0.5"
+            >
               Our Experience
             </Link>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 1 }}
-            className="mt-12 flex justify-center text-white/60"
-            aria-hidden
-          >
-            <ChevronDown className="w-6 h-6 scroll-cue" />
-          </motion.div>
         </div>
       </div>
+
+      {/* "Continua a leggere" read-more scroll link */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.3, duration: 1 }}
+        onClick={scrollToContent}
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors"
+        aria-label="Scroll to discover more"
+      >
+        <span className="text-xs font-sans uppercase tracking-[0.3em]">Discover</span>
+        <ChevronDown className="w-6 h-6 scroll-cue" />
+      </motion.button>
     </section>
   )
 }
@@ -179,16 +188,16 @@ function HeroSection() {
 /* ─── NEED TO KNOW ─── */
 function NeedToKnowSection() {
   return (
-    <section className="py-16 md:py-20 bg-boma-off-white section-padding">
+    <section id="need-to-know" className="py-16 md:py-20 bg-boma-off-white section-padding">
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <FadeIn>
             <div className="pl-5 border-l-2 border-boma-rust/40">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-boma-rust/70 mb-3">{needToKnow.title}</h3>
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-boma-rust-dark mb-3">{needToKnow.title}</h3>
               <ul className="space-y-2">
                 {needToKnow.items.map((item, i) => (
-                  <li key={i} className="text-sm text-boma-charcoal/70 leading-relaxed flex gap-2">
-                    <Check className="w-4 h-4 text-boma-rust shrink-0 mt-0.5" />
+                  <li key={i} className="text-sm text-boma-charcoal/75 leading-relaxed flex gap-2">
+                    <Check className="w-4 h-4 text-boma-rust-dark shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -196,21 +205,21 @@ function NeedToKnowSection() {
             </div>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <div className="pl-5 border-l-2 border-boma-green/40">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-boma-rust/70 mb-3">{siteData.enquiries.heading}</h3>
-              <p className="text-boma-charcoal/70 text-sm leading-relaxed mb-5">{siteData.enquiries.description}</p>
+            <div className="pl-5 border-l-2 border-boma-rust/40">
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-boma-rust-dark mb-3">{siteData.enquiries.heading}</h3>
+              <p className="text-boma-charcoal/75 text-sm leading-relaxed mb-5">{siteData.enquiries.description}</p>
               <a
                 href={siteData.bookingUrl}
-                className="inline-block px-6 py-3 bg-boma-rust text-white text-sm font-semibold uppercase hover:bg-boma-rust-dark hover:shadow-lg hover:shadow-boma-rust/25 transition-all mb-5"
+                className="inline-block px-6 py-3 bg-boma-charcoal text-white text-sm font-semibold uppercase hover:bg-black hover:shadow-lg transition-all mb-5"
               >
                 Book Now
               </a>
               <p className="text-boma-charcoal/50 text-xs uppercase tracking-wider mb-2">{siteData.enquiries.preferToSpeak}</p>
               <div className="space-y-1.5">
-                <a href={`tel:${siteData.phone}`} className="block text-boma-charcoal/70 text-sm hover:text-boma-rust transition-colors">
+                <a href={`tel:${siteData.phone}`} className="block text-boma-rust-dark text-sm font-medium hover:text-boma-charcoal transition-colors">
                   {siteData.phone}
                 </a>
-                <a href={`mailto:${siteData.email}`} className="block text-boma-charcoal/70 text-sm hover:text-boma-rust transition-colors">
+                <a href={`mailto:${siteData.email}`} className="block text-boma-rust-dark text-sm font-medium hover:text-boma-charcoal transition-colors">
                   {siteData.email}
                 </a>
               </div>
@@ -237,12 +246,16 @@ function ExperienceOverviewSection() {
           transition={{ duration: 0.8 }}
           className="relative"
         >
-          <Link to="/experience" className="block">
+          <Link to="/experience" className="block relative">
             <FallbackImage
               src={galleryImages[0].src}
               alt="The Boma venue"
               className="w-full h-[350px] md:h-[450px] object-cover"
             />
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-boma-charcoal/70 to-transparent" />
+            <span className="absolute bottom-4 left-4 text-white text-sm font-sans uppercase tracking-[0.18em]">
+              The Boma — Dinner & Drum Show
+            </span>
           </Link>
 
           <div className="mt-8 grid grid-cols-3 gap-2">
@@ -264,7 +277,7 @@ function ExperienceOverviewSection() {
           animate={rightInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.15 }}
         >
-          <span className="text-boma-rust text-xs uppercase tracking-[0.25em] font-semibold">
+          <span className="text-boma-rust-dark text-sm uppercase tracking-[0.25em] font-semibold">
             The Experience
           </span>
 
@@ -289,11 +302,11 @@ function ExperienceOverviewSection() {
           </p>
 
           <div className="mb-7 pl-5 border-l-2 border-boma-rust/40">
-            <h3 className="text-xs font-semibold text-boma-rust/70 uppercase tracking-widest mb-3">Need to Know</h3>
+            <h3 className="text-sm font-semibold text-boma-rust-dark uppercase tracking-widest mb-3">Need to Know</h3>
             <div className="space-y-2">
               {needToKnow.items.map((item, i) => (
                 <div key={i} className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-boma-rust shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-boma-rust-dark shrink-0 mt-0.5" />
                   <span className="text-sm text-boma-charcoal/70">{item}</span>
                 </div>
               ))}
@@ -301,11 +314,11 @@ function ExperienceOverviewSection() {
           </div>
 
           <div className="mb-7 pl-5 border-l-2 border-boma-rust/40">
-            <h3 className="text-xs font-semibold text-boma-rust/70 uppercase tracking-widest mb-3">Highlights</h3>
+            <h3 className="text-sm font-semibold text-boma-rust-dark uppercase tracking-widest mb-3">Highlights</h3>
             <div className="space-y-2">
               {highlights.map((item, i) => (
                 <div key={i} className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-boma-rust shrink-0" />
+                  <Check className="w-4 h-4 text-boma-rust-dark shrink-0" />
                   <span className="text-sm text-boma-charcoal">{item}</span>
                 </div>
               ))}
@@ -313,7 +326,7 @@ function ExperienceOverviewSection() {
           </div>
 
           <div className="mb-7 pl-5 border-l-2 border-boma-rust/40">
-            <h3 className="text-xs font-semibold text-boma-rust/70 uppercase tracking-widest mb-3">Downloads</h3>
+            <h3 className="text-sm font-semibold text-boma-rust-dark uppercase tracking-widest mb-3">Downloads</h3>
             <div className="space-y-2">
               {siteData.downloads.map((dl, i) => (
                 <a
@@ -321,9 +334,9 @@ function ExperienceOverviewSection() {
                   href={dl.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-sm text-boma-charcoal/70 hover:text-boma-rust transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-boma-charcoal/70 hover:text-boma-rust-dark transition-colors"
                 >
-                  <Download className="w-4 h-4 text-boma-rust shrink-0" />
+                  <Download className="w-4 h-4 text-boma-rust-dark shrink-0" />
                   {dl.title}
                 </a>
               ))}
@@ -331,19 +344,19 @@ function ExperienceOverviewSection() {
           </div>
 
           <div className="mb-7 pl-5 border-l-2 border-boma-rust/40">
-            <h3 className="text-xs font-semibold text-boma-rust/70 uppercase tracking-widest mb-3">Enquiries</h3>
+            <h3 className="text-sm font-semibold text-boma-rust-dark uppercase tracking-widest mb-3">Enquiries</h3>
             <p className="text-sm text-boma-charcoal/70 mb-3">{siteData.enquiries.description}</p>
             <p className="text-sm text-boma-charcoal/70 mb-1">{siteData.enquiries.preferToSpeak}</p>
             <a
               href={`tel:${siteData.phone}`}
-              className="text-sm font-semibold text-boma-rust hover:text-boma-rust-dark transition-colors"
+              className="text-sm font-semibold text-boma-rust-dark hover:text-boma-charcoal transition-colors"
             >
               {siteData.phone}
             </a>
             <span className="text-boma-charcoal/30 mx-2">|</span>
             <a
               href={`mailto:${siteData.email}`}
-              className="text-sm font-semibold text-boma-rust hover:text-boma-rust-dark transition-colors"
+              className="text-sm font-semibold text-boma-rust-dark hover:text-boma-charcoal transition-colors"
             >
               {siteData.email}
             </a>
@@ -605,7 +618,7 @@ function GalleryPreviewSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 group-hover:from-black/70 transition-colors duration-300 flex items-end p-3">
                   <div className="opacity-100 transition-opacity duration-300">
-                    <span className="text-boma-rust text-[10px] uppercase tracking-wider">{img.category}</span>
+                    <span className="text-white/75 text-[10px] uppercase tracking-wider">{img.category}</span>
                     <p className="text-white text-sm font-medium">{img.alt}</p>
                   </div>
                 </div>

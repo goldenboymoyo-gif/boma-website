@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { siteData } from '../data/siteData'
 import FallbackImage from './FallbackImage'
+import BookDirectBanner from './BookDirectBanner'
 import { FacebookIcon, InstagramIcon, YoutubeIcon, TripAdvisorIcon } from './SocialIcons'
 
 const footerLinks = [
@@ -63,6 +64,11 @@ export default function Footer() {
             </form>
           )}
         </div>
+      </div>
+
+      {/* Book-direct / best-price strip */}
+      <div className="border-b border-white/10 py-4">
+        <BookDirectBanner tone="light" />
       </div>
 
       {/* Main grid */}
