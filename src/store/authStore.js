@@ -96,6 +96,14 @@ const useAuthStore = create((set) => ({
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
         return { success: false, error: 'Sign-in was cancelled' }
       }
+      if (err.code === 'auth/unauthorized-domain') {
+        return {
+          success: false,
+          error: 'This site is not yet an authorized domain in Firebase. Add ' +
+            (typeof window !== 'undefined' ? window.location.hostname : 'this domain') +
+            ' under Authentication → Settings → Authorized domains.',
+        }
+      }
       return {
         success: false,
         error: err.error || err.message || 'Social sign-in failed',
