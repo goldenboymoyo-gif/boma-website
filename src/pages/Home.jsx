@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
@@ -49,13 +49,6 @@ function FadeIn({ children, className, delay = 0, direction = 'up' }) {
 
 /* ─── HERO ─── */
 function HeroSection() {
-  const [useVideo, setUseVideo] = useState(true)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    setUseVideo(window.innerWidth >= 768)
-  }, [])
-
   const scrollToContent = () => {
     const next = document.getElementById('story-band')
     if (next) next.scrollIntoView({ behavior: 'smooth' })
@@ -65,26 +58,15 @@ function HeroSection() {
     <section className="relative w-full min-h-[600px] flex items-center overflow-hidden" style={{ height: '100dvh', minHeight: '600px' }}>
       {/* Background */}
       <div className="absolute inset-0">
-        {useVideo ? (
-          <video
-            src={siteData.heroVideo}
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        ) : (
-          <img
-            src="https://vfsc-umbraco.live.fireworkx.net/media/tnyd4m5n/the-boma-dinner-drum-show.jpg"
-            alt="The Boma Dinner and Drum Show venue"
-            className="w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-        )}
+        <video
+          src={siteData.heroVideo}
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
 
         {/* Legibility scrim — keeps all hero text visible & clean over any frame */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-black/60" />
@@ -159,7 +141,7 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* "Continua a leggere" read-more scroll link */}
+      {/* Read-more scroll link */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -209,7 +191,7 @@ function StoryBandSection() {
             the tastes, sights and sounds of Africa.
           </p>
           <Link to="/experience" className="inline-flex items-center gap-2 text-boma-rust-dark font-semibold text-sm uppercase tracking-wider hover:text-boma-charcoal transition-colors group">
-            Continua a leggere
+            Continue Reading
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </FadeIn>
@@ -237,7 +219,7 @@ function CuisineModuleSection() {
             adventurousness with a certificate.
           </p>
           <Link to="/menu" className="inline-flex items-center gap-2 text-boma-rust-dark font-semibold text-sm uppercase tracking-wider hover:text-boma-charcoal transition-colors group">
-            Di più sul concetto culinario
+            Explore the Culinary Experience
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </FadeIn>

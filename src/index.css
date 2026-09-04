@@ -50,6 +50,13 @@
   /* Lingers-style rem scaling at media breakpoints */
   html {
     font-size: 100%;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+  @supports not (overflow: clip) {
+    html {
+      overflow-x: hidden;
+    }
   }
   @media (max-width: 1024px) {
     html { font-size: 93.75%; }

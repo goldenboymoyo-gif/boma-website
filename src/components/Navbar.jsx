@@ -29,6 +29,7 @@ const estateLinks = [
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsMenuOpen(false)
+    setProfileOpen(false)
   }, [location])
 
   useEffect(() => {
@@ -46,12 +48,22 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
+    if (!profileOpen) return
+    const onDocClick = (e) => {
+      if (!e.target.closest('[data-profile-menu]')) setProfileOpen(false)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    return () => document.removeEventListener('mousedown', onDocClick)
+  }, [profileOpen])
+
+  useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])
 
   const handleLogout = () => {
     logout()
+    setProfileOpen(false)
     navigate('/')
   }
 
@@ -144,11 +156,13 @@ export default function Navbar() {
             </Link>
 
             {user ? (
-              <div className="relative">
+              <div className="relative" data-profile-menu>
                 <button
-                  onClick={() => { if (!solid) return; }}
+                  onClick={() => setProfileOpen((prev) => !prev)}
                   className="flex items-center gap-2 transition-colors duration-300"
                   aria-label="Account"
+                  aria-haspopup="menu"
+                  aria-expanded={profileOpen}
                 >
                   <div className={cn(
                     'w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors duration-300',
@@ -157,30 +171,32 @@ export default function Navbar() {
                     {getInitials(user.name)}
                   </div>
                 </button>
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-taupe shadow-lg">
-                  <div className="px-4 py-3 border-b border-taupe/50">
-                    <p className="font-sans font-medium text-boma-charcoal text-sm">{user.name || 'User'}</p>
-                    <p className="font-sans text-sm text-boma-charcoal/60 truncate">{user.email}</p>
+                {profileOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-taupe shadow-lg z-10">
+                    <div className="px-4 py-3 border-b border-taupe/50">
+                      <p className="font-sans font-medium text-boma-charcoal text-sm">{user.name || 'User'}</p>
+                      <p className="font-sans text-sm text-boma-charcoal/60 truncate">{user.email}</p>
+                      {user.role === 'admin' && (
+                        <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-sans uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
+                          Administrator
+                        </span>
+                      )}
+                    </div>
                     {user.role === 'admin' && (
-                      <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-sans uppercase tracking-wider rounded-full bg-boma-rust/10 text-boma-rust">
-                        Administrator
-                      </span>
+                      <Link to="/admin" className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-boma-charcoal hover:bg-page-bg transition-colors">
+                        <User className="w-4 h-4" />
+                        Admin Panel
+                      </Link>
                     )}
+                    <button
+                      onClick={() => { handleLogout(); }}
+                      className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
                   </div>
-                  {user.role === 'admin' && (
-                    <Link to="/admin" className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-boma-charcoal hover:bg-page-bg transition-colors">
-                      <User className="w-4 h-4" />
-                      Admin Panel
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => { handleLogout(); }}
-                    className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </button>
-                </div>
+                )}
               </div>
             ) : (
               <Link
