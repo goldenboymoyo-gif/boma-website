@@ -40,7 +40,6 @@ export default function News() {
         minHeight="min-h-[350px]"
         align="left"
         showScroll={false}
-        showVideo={false}
       />
 
       {/* Filter & Newsletter Row */}

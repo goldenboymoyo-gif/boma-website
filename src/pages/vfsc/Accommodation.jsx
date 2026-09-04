@@ -21,7 +21,6 @@ function HeroBanner() {
       height="h-[70vh]"
       minHeight="min-h-[500px]"
       align="center"
-      showVideo={false}
     />
   )
 }

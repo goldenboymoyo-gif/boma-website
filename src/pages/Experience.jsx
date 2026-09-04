@@ -25,7 +25,6 @@ function HeroBanner() {
       titleAccent="Experience"
       subtitle="A legendary fusion of mouth-watering cuisine, energetic dance, interactive drumming and traditional storytelling — an evening that stays with you long after you leave."
       poster="https://vfsc-umbraco.live.fireworkx.net/media/kaukkvg5/victoria-falls-safari-lodge-8.png"
-      showVideo={false}
     >
       <a href={siteData.bookingUrl} className="btn-primary">
         Book Your Evening

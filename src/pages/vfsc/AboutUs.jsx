@@ -21,7 +21,6 @@ export default function AboutUs() {
         minHeight="min-h-[500px]"
         align="center"
         showScroll={false}
-        showVideo={false}
       />
 
       {/* Story Section */}

@@ -21,7 +21,6 @@ export default function FunctionsAndEvents() {
         minHeight="min-h-[500px]"
         align="center"
         showScroll={false}
-        showVideo={false}
       />
 
       {/* Venues */}

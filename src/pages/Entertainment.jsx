@@ -116,7 +116,6 @@ export default function Entertainment() {
         title="Entertainment"
         subtitle="An explosion of rhythm, colour and tradition that will leave your heart racing and your spirit soaring."
         poster="https://vfsc-umbraco.live.fireworkx.net/media/3buojz0t/victoria-falls-safari-lodge-6.png"
-        showVideo={false}
         height="h-[70vh]"
         minHeight="min-h-[500px]"
         align="left"

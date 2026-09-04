@@ -1,10 +1,9 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 export default function VideoHero({
-  video = 'https://vfsc-umbraco.live.fireworkx.net/media/q4ont1ql/the-boma-dinner-and-drum-show.mp4',
   poster,
   badge,
   title,
@@ -16,16 +15,9 @@ export default function VideoHero({
   align = 'center',
   overlay = 'from-boma-charcoal/80 via-boma-charcoal/50 to-boma-charcoal/85',
   showScroll = true,
-  showVideo = true,
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
-  const [useVideo, setUseVideo] = useState(true)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    setUseVideo(window.innerWidth >= 768)
-  }, [])
 
   const contentAlign = {
     center: 'text-center items-center',
@@ -35,27 +27,15 @@ export default function VideoHero({
 
   return (
     <section ref={ref} className={cn('relative flex items-center overflow-hidden', height, minHeight)}>
-      {/* Video / Poster Background */}
+      {/* Poster Background (image only — the home page is the sole video hero) */}
       <div className="absolute inset-0">
-        {showVideo && useVideo ? (
-          <video
-            src={video}
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        ) : poster ? (
-          <img
-            src={poster}
-            alt=""
-            className="w-full h-full object-cover animate-ken-burns"
-            loading="eager"
-            decoding="async"
-          />
-        ) : null}
+        <img
+          src={poster}
+          alt=""
+          className="w-full h-full object-cover animate-ken-burns"
+          loading="eager"
+          decoding="async"
+        />
 
         <div className={cn('absolute inset-0 bg-gradient-to-b', overlay)} />
 

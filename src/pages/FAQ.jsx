@@ -35,7 +35,6 @@ export default function FAQ() {
         title="Frequently Asked Questions"
         subtitle="Everything you need to know before your visit to The Boma."
         poster="https://vfsc-umbraco.live.fireworkx.net/media/b5vlmnje/victoria-falls-safari-lodge-22.png"
-        showVideo={false}
         height="h-[60vh]"
         minHeight="min-h-[450px]"
         align="center"

@@ -30,7 +30,6 @@ function HeroBanner() {
       titleAccent="Menu"
       subtitle="A four-course feast of local and international cuisine — from the Boma Braai and campfire to a decadent dessert buffet."
       poster="https://vfsc-umbraco.live.fireworkx.net/media/1i2nzih5/victoria-falls-safari-lodge-13.png"
-      showVideo={false}
     >
       <a href="#menu" className="btn-primary">
         Explore the Menu

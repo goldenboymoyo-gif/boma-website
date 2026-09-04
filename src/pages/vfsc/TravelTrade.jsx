@@ -88,7 +88,6 @@ export default function TravelTrade() {
         minHeight="min-h-[350px]"
         align="left"
         showScroll={false}
-        showVideo={false}
       />
 
       {/* Introduction */}

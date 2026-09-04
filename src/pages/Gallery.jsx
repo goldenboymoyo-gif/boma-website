@@ -70,7 +70,6 @@ export default function Gallery() {
         title="Gallery"
         subtitle="A visual journey through the sights, flavours and energy of The Boma experience."
         poster={galleryImages[0]?.src}
-        showVideo={false}
         height="h-[70vh]"
         minHeight="min-h-[500px]"
         align="left"
