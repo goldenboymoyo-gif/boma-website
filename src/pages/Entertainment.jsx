@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Music, Users, BookOpen, ChevronRight, Clock, Sparkles, ArrowRight, Eye, Scissors, ShoppingBag } from 'lucide-react'
+import { Music, Users, BookOpen, ChevronRight, Clock, ArrowRight, Eye, Scissors, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { siteData, timeline, experiences, galleryImages } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
@@ -326,7 +326,6 @@ export default function Entertainment() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Sparkles className="text-boma-rust mx-auto mb-6" size={32} />
             <h2 className="section-heading text-white mb-6">
               Ready for an Unforgettable Night?
             </h2>

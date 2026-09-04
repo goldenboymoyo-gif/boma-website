@@ -4,7 +4,6 @@ import { experiences, siteData } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
 import SectionHeading from '../components/SectionHeading'
 import QuoteBreak from '../components/QuoteBreak'
-import LinkBoxes from '../components/LinkBoxes'
 import { useScrollReveal, useParallax } from '../hooks/useAnimations'
 import FallbackImage from '../components/FallbackImage'
 import { cn } from '../lib/utils'
@@ -126,9 +125,9 @@ function Timeline() {
         />
 
         <div className="relative mt-16">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-taupe/60 hidden lg:block" />
+          <div className="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-0 w-px bg-taupe/60" />
 
-          <div className="space-y-14 lg:space-y-0">
+          <div className="space-y-16 lg:space-y-24">
             {experiences.map((exp, i) => {
               const isLeft = i % 2 === 0
               return (
@@ -146,16 +145,16 @@ function TimelineItem({ item, index, isLeft }) {
   const { ref, isInView } = useScrollReveal(0.15)
 
   return (
-    <div ref={ref} className="relative lg:grid lg:grid-cols-2 lg:items-center lg:gap-20 lg:pb-16">
+    <div ref={ref} className="relative lg:grid lg:grid-cols-2 lg:gap-20">
       {/* Center node */}
-      <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+      <div className="absolute left-4 lg:left-1/2 -translate-x-1/2 top-2 z-10">
         <motion.div
           initial={{ scale: 0 }}
           animate={isInView ? { scale: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="w-10 h-10 rounded-full bg-boma-charcoal border border-taupe flex items-center justify-center"
+          className="w-9 h-9 rounded-full bg-boma-charcoal border-2 border-taupe flex items-center justify-center"
         >
-          <span className="text-taupe text-sm font-semibold">{String(index + 1).padStart(2, '0')}</span>
+          <span className="text-taupe text-xs font-semibold tracking-wider">{String(index + 1).padStart(2, '0')}</span>
         </motion.div>
       </div>
 
@@ -164,9 +163,14 @@ function TimelineItem({ item, index, isLeft }) {
         initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.7 }}
-        className={cn('mb-8 lg:mb-0', isLeft ? 'lg:pr-24' : 'lg:pl-24 lg:order-2')}
+        className={cn(
+          'pl-14 lg:pl-0',
+          isLeft
+            ? 'lg:text-right lg:pr-24 lg:col-start-1'
+            : 'lg:pl-24 lg:col-start-2'
+        )}
       >
-        <div className={cn('bg-[#F1EFE9] border border-taupe/40 px-7 py-7', isLeft && 'lg:text-right')}>
+        <div className={cn('bg-[#F7F7F7] border border-taupe/40 px-7 py-7', isLeft && 'lg:text-right')}>
           <div className={cn('inline-flex items-center gap-3 mb-3', isLeft && 'lg:flex-row-reverse')}>
             <span className="kicker">{item.time}</span>
             <span className="deko-line" />
@@ -183,12 +187,17 @@ function TimelineItem({ item, index, isLeft }) {
         initial={{ opacity: 0, x: isLeft ? 40 : -40 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className={cn(isLeft ? 'lg:order-2 lg:pl-6' : 'lg:order-1 lg:pr-6')}
+        className={cn(
+          'mt-6 lg:mt-0 pl-14 lg:pl-0',
+          isLeft
+            ? 'lg:col-start-2 lg:pr-24 lg:pl-6'
+            : 'lg:col-start-1 lg:pl-24 lg:pr-6'
+        )}
       >
         <FallbackImage
           src={item.image}
           alt={item.title}
-          className="w-full h-56 lg:h-56 object-cover"
+          className="w-full h-56 lg:h-64 object-cover"
         />
       </motion.div>
     </div>
@@ -206,8 +215,30 @@ function Highlights() {
           subtitle="An evening of culinary delights and cultural immersion"
         />
 
-        <div className="mt-16">
-          <LinkBoxes items={highlightsData} columns={3} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+          {highlightsData.map((item, i) => {
+            const Icon = item.icon
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.19, 1, 0.22, 1] }}
+                className="group bg-white border border-taupe/40 h-full p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(28,26,23,0.08)]"
+              >
+                <div className="w-14 h-14 rounded-full bg-boma-off-white border border-taupe/40 flex items-center justify-center mb-6 transition-colors duration-500 group-hover:bg-boma-charcoal">
+                  <Icon className="w-6 h-6 text-taupe-dark transition-colors duration-500 group-hover:text-white" />
+                </div>
+                <h3 className="text-xl text-ink-strong mb-3" style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}>
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed font-serif text-ink/80">
+                  {item.description}
+                </p>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

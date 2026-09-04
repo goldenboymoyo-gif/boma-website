@@ -4,8 +4,8 @@ import { siteData } from '../data/siteData'
 import { cn } from '../lib/utils'
 
 /**
- * "Book direct / best price guaranteed" trust banner — lingers.it's
- * "Prenota" best-price strip, adapted for The Boma. Rendered as a slim
+ * "Book direct / best price guaranteed" trust banner — modeled on the
+ * best-price ribbon pattern, adapted for The Boma. Rendered as a slim
  * full-width ribbon that links to the booking page.
  */
 export default function BookDirectBanner({ tone = 'dark', className }) {

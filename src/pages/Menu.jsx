@@ -81,67 +81,62 @@ function Introduction() {
 
 function MenuCard({ section, index }) {
   const { ref, isInView } = useScrollReveal(0.15)
-  const isEven = index % 2 === 0
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7 }}
-      className={cn(
-        'relative bg-white py-8 md:py-10 px-8 md:px-10 transition-all duration-500'
-      )}
+      transition={{ duration: 0.7, delay: index * 0.08 }}
+      className="relative h-full bg-[#F7F7F7] border border-taupe/50 p-8 md:p-10 transition-all duration-500 hover:border-taupe-dark/60 hover:shadow-[0_16px_40px_rgba(28,26,23,0.06)]"
     >
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-xs tracking-[0.2em] uppercase text-boma-rust-dark font-semibold">{section.title}</span>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-8 h-px bg-boma-rust/50" />
+          <span className="text-xs tracking-[0.22em] uppercase text-taupe-dark font-semibold">{section.title}</span>
         </div>
-        <p className="text-sm text-boma-charcoal/75 italic" style={{ fontFamily: 'var(--font-accent)' }}>
+        <p className="text-sm text-ink/75 italic font-serif" style={{ fontFamily: 'var(--font-accent)' }}>
           {section.description}
         </p>
+        <div className="mt-5 h-px bg-gradient-to-r from-taupe/60 via-taupe/30 to-transparent" />
       </div>
 
       {section.items && section.items.length > 0 ? (
-        <div className="space-y-5">
+        <ul className="space-y-5">
           {section.items.map((item, i) => (
-            <div key={i} className="group">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-base font-semibold text-boma-charcoal" style={{ fontFamily: 'var(--font-heading)' }}>
-                      {item.name}
-                    </h4>
-                    {item.dietary && item.dietary.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        {item.dietary.map((d) => {
-                          const badge = dietaryBadge[d]
-                          if (!badge) return null
-                          return (
-                            <span
-                              key={d}
-                              className={cn('inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 font-medium', badge.color)}
-                              title={badge.label}
-                            >
-                              {d}
-                            </span>
-                          )
-                        })}
-                      </div>
-                    )}
+            <li key={i} className="group">
+              <div className="flex items-end justify-between gap-4">
+                <h4 className="text-base font-semibold text-ink-strong leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {item.name}
+                </h4>
+                {item.dietary && item.dietary.length > 0 && (
+                  <div className="flex items-center gap-1 shrink-0 pb-1">
+                    {item.dietary.map((d) => {
+                      const badge = dietaryBadge[d]
+                      if (!badge) return null
+                      return (
+                        <span
+                          key={d}
+                          className={cn('inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-bold', badge.color)}
+                          title={badge.label}
+                        >
+                          {d}
+                        </span>
+                      )
+                    })}
                   </div>
-                  <p className="text-sm text-boma-charcoal/75 leading-relaxed">{item.description}</p>
-                </div>
+                )}
               </div>
+              <p className="text-sm text-ink/70 leading-relaxed mt-1 font-serif">{item.description}</p>
               {i < section.items.length - 1 && (
-                <div className="mt-5 border-b border-dotted border-boma-rust/15" />
+                <div className="mt-4 border-b border-dotted border-taupe/50" />
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
         <div className="py-4">
-          <p className="text-sm text-boma-charcoal/70 leading-relaxed">{section.description}</p>
+          <p className="text-sm text-ink/70 leading-relaxed font-serif">{section.description}</p>
           {section.dietary && section.dietary.length > 0 && (
             <div className="flex items-center gap-2 mt-3">
               {section.dietary.map((d) => {
