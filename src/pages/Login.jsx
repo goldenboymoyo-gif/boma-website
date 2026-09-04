@@ -2,7 +2,6 @@
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { cn } from '../lib/utils';
 import useAuthStore from '../store/authStore';
 import {
@@ -20,6 +19,7 @@ import { FacebookIcon } from '../components/SocialIcons';
 export default function Login() {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
+  const socialLogin = useAuthStore((s) => s.socialLogin);
   const clearError = useAuthStore((s) => s.clearError);
 
   const {
@@ -36,6 +36,7 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [socialLoading, setSocialLoading] = useState('');
   const [serverError, setServerError] = useState('');
 
   const onSubmit = async (data) => {
@@ -47,6 +48,19 @@ export default function Login() {
     if (result.success) {
       navigate(result.role === 'admin' ? '/admin' : '/');
     } else {
+      setServerError(result.error);
+    }
+  };
+
+  const handleSocial = async (provider) => {
+    setServerError('');
+    clearError();
+    setSocialLoading(provider);
+    const result = await socialLogin(provider);
+    setSocialLoading('');
+    if (result.success) {
+      navigate(result.role === 'admin' ? '/admin' : '/');
+    } else if (result.error) {
       setServerError(result.error);
     }
   };
@@ -241,38 +255,28 @@ export default function Login() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              onClick={() => toast.custom((t) => (
-                <div className={cn('flex items-center gap-3 px-5 py-3.5 bg-white rounded-lg shadow-lg border border-boma-charcoal/10', t.visible ? 'animate-enter' : 'animate-leave')}>
-                  <div className="w-8 h-8 rounded-full bg-boma-rust/10 flex items-center justify-center shrink-0">
-                    <Globe className="w-4 h-4 text-boma-rust" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-boma-charcoal">Coming soon</p>
-                    <p className="text-xs text-boma-charcoal/60">Google sign-in will be available shortly</p>
-                  </div>
-                </div>
-              ))}
-              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer"
+              disabled={socialLoading === 'google'}
+              onClick={() => handleSocial('google')}
+              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <Globe className="w-5 h-5" />
+              {socialLoading === 'google' ? (
+                <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+              ) : (
+                <Globe className="w-5 h-5" />
+              )}
               Google
             </button>
             <button
               type="button"
-              onClick={() => toast.custom((t) => (
-                <div className={cn('flex items-center gap-3 px-5 py-3.5 bg-white rounded-lg shadow-lg border border-boma-charcoal/10', t.visible ? 'animate-enter' : 'animate-leave')}>
-                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                    <FacebookIcon className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-boma-charcoal">Coming soon</p>
-                    <p className="text-xs text-boma-charcoal/60">Facebook sign-in will be available shortly</p>
-                  </div>
-                </div>
-              ))}
-              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer"
+              disabled={socialLoading === 'facebook'}
+              onClick={() => handleSocial('facebook')}
+              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <FacebookIcon className="w-5 h-5 text-blue-600" />
+              {socialLoading === 'facebook' ? (
+                <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+              ) : (
+                <FacebookIcon className="w-5 h-5 text-blue-600" />
+              )}
               Facebook
             </button>
           </div>

@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import useAuthStore from '../store/authStore';
+import { Globe } from 'lucide-react';
+import { FacebookIcon } from '../components/SocialIcons';
 import {
   User,
   Mail,
@@ -20,6 +22,7 @@ import {
 export default function Register() {
   const navigate = useNavigate();
   const registerUser = useAuthStore((s) => s.register);
+  const socialLogin = useAuthStore((s) => s.socialLogin);
   const clearError = useAuthStore((s) => s.clearError);
 
   const {
@@ -41,6 +44,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [socialLoading, setSocialLoading] = useState('');
   const [serverError, setServerError] = useState('');
 
   const password = watch('password');
@@ -66,6 +70,19 @@ export default function Register() {
     if (result.success) {
       navigate(result.role === 'admin' ? '/admin' : '/');
     } else {
+      setServerError(result.error);
+    }
+  };
+
+  const handleSocial = async (provider) => {
+    setServerError('');
+    clearError();
+    setSocialLoading(provider);
+    const result = await socialLogin(provider);
+    setSocialLoading('');
+    if (result.success) {
+      navigate(result.role === 'admin' ? '/admin' : '/');
+    } else if (result.error) {
       setServerError(result.error);
     }
   };
@@ -369,6 +386,43 @@ export default function Register() {
               )}
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-boma-charcoal/20" />
+            <span className="text-xs text-boma-charcoal/60 uppercase">or continue with</span>
+            <div className="flex-1 h-px bg-boma-charcoal/20" />
+          </div>
+
+          {/* Social Login */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              disabled={socialLoading === 'google'}
+              onClick={() => handleSocial('google')}
+              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {socialLoading === 'google' ? (
+                <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+              ) : (
+                <Globe className="w-5 h-5" />
+              )}
+              Google
+            </button>
+            <button
+              type="button"
+              disabled={socialLoading === 'facebook'}
+              onClick={() => handleSocial('facebook')}
+              className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {socialLoading === 'facebook' ? (
+                <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+              ) : (
+                <FacebookIcon className="w-5 h-5 text-blue-600" />
+              )}
+              Facebook
+            </button>
+          </div>
 
           {/* Login Link */}
           <p className="text-center mt-8 text-sm text-boma-charcoal">

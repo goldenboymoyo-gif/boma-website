@@ -1,159 +1,137 @@
 import { create } from 'zustand'
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile as fbUpdateProfile,
-  updatePassword as fbUpdatePassword,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  getIdToken,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { auth, db } from '../lib/firebase'
+import { auth } from '../lib/firebase'
+import { http, getToken, setToken } from '../lib/http'
+
+// Maps a backend user payload to the shape expected across the app.
+function mapUser(payload) {
+  return {
+    uid: payload.id || payload.uid,
+    id: payload.id || payload.uid,
+    email: payload.email || '',
+    name: payload.name || '',
+    phone: payload.phone || '',
+    role: payload.role || 'user',
+    provider: payload.provider || 'email',
+    avatar: payload.avatar || '',
+    createdAt: payload.createdAt || new Date().toISOString(),
+  }
+}
 
 const useAuthStore = create((set) => ({
   user: null,
   userProfile: null,
   loading: true,
 
-  initialize: () => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        let profile = {}
-        try {
-          const profileDoc = await getDoc(doc(db, 'users', firebaseUser.uid))
-          profile = profileDoc.exists() ? profileDoc.data() : {}
-        } catch {
-          profile = {}
-        }
-        set({
-          user: {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            name: firebaseUser.displayName || profile.name || '',
-            phone: profile.phone || '',
-            role: profile.role || 'user',
-            createdAt: profile.createdAt?.toDate?.() || firebaseUser.metadata.creationTime,
-          },
-          userProfile: profile,
-          loading: false,
-        })
-      } else {
-        set({ user: null, userProfile: null, loading: false })
-      }
-    })
-    return unsubscribe
+  initialize: async () => {
+    const token = getToken()
+    if (!token) {
+      set({ user: null, userProfile: null, loading: false })
+      return
+    }
+    try {
+      const data = await http.get('/auth/me')
+      const mapped = mapUser(data.user)
+      set({ user: mapped, userProfile: data.user, loading: false })
+    } catch {
+      setToken('')
+      set({ user: null, userProfile: null, loading: false })
+    }
   },
 
   register: async (data) => {
     try {
-      const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
-      await fbUpdateProfile(cred.user, { displayName: data.name })
-      const userProfile = {
+      const result = await http.post('/auth/register', {
         name: data.name,
         email: data.email,
+        password: data.password,
         phone: data.phone || '',
-        role: 'user',
-        createdAt: serverTimestamp(),
-      }
-      await setDoc(doc(db, 'users', cred.user.uid), userProfile)
-      set({
-        user: {
-          uid: cred.user.uid,
-          email: data.email,
-          name: data.name,
-          phone: data.phone || '',
-          role: 'user',
-          createdAt: new Date(),
-        },
-        userProfile,
-        loading: false,
       })
-      return { success: true, role: 'user' }
+      setToken(result.token)
+      const mapped = mapUser(result.user)
+      set({ user: mapped, userProfile: result.user, loading: false })
+      return { success: true, role: result.user.role || 'user' }
     } catch (err) {
-      const message = err.code === 'auth/email-already-in-use'
-        ? 'An account with this email already exists'
-        : err.message
-      return { success: false, error: message }
+      return { success: false, error: err.error || err.message }
     }
   },
 
   login: async (email, password) => {
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, password)
-      const profileDoc = await getDoc(doc(db, 'users', cred.user.uid))
-      const profile = profileDoc.exists() ? profileDoc.data() : {}
-      const role = profile.role || 'user'
-      set({
-        user: {
-          uid: cred.user.uid,
-          email: cred.user.email,
-          name: cred.user.displayName || profile.name || '',
-          phone: profile.phone || '',
-          role,
-          createdAt: profile.createdAt?.toDate?.() || cred.user.metadata.creationTime,
-        },
-        userProfile: profile,
-        loading: false,
-      })
-      return { success: true, role }
+      const result = await http.post('/auth/login', { email, password })
+      setToken(result.token)
+      const mapped = mapUser(result.user)
+      set({ user: mapped, userProfile: result.user, loading: false })
+      return { success: true, role: result.user.role || 'user' }
     } catch (err) {
-      const message = err.code === 'auth/invalid-credential'
-        ? 'Invalid email or password'
-        : err.message
-      return { success: false, error: message }
+      return { success: false, error: err.error || err.message }
+    }
+  },
+
+  socialLogin: async (provider) => {
+    try {
+      let authProvider
+      if (provider === 'google') {
+        authProvider = new GoogleAuthProvider()
+      } else if (provider === 'facebook') {
+        authProvider = new FacebookAuthProvider()
+      } else {
+        return { success: false, error: 'Unknown provider' }
+      }
+
+      const cred = await signInWithPopup(auth, authProvider)
+      const idToken = await getIdToken(cred.user)
+
+      const result = await http.post('/auth/social', { idToken, provider })
+      setToken(result.token)
+      const mapped = mapUser(result.user)
+      set({ user: mapped, userProfile: result.user, loading: false })
+      return { success: true, role: result.user.role || 'user' }
+    } catch (err) {
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+        return { success: false, error: 'Sign-in was cancelled' }
+      }
+      return {
+        success: false,
+        error: err.error || err.message || 'Social sign-in failed',
+      }
     }
   },
 
   logout: async () => {
-    await signOut(auth)
+    setToken('')
     set({ user: null, userProfile: null })
   },
 
   updateProfile: async (data) => {
     try {
-      const fbUser = auth.currentUser
-      if (!fbUser) return { success: false, error: 'Not authenticated' }
-
-      if (data.name && data.name !== fbUser.displayName) {
-        await fbUpdateProfile(fbUser, { displayName: data.name })
-      }
-
-      const userRef = doc(db, 'users', fbUser.uid)
-      const updates = {}
-      if (data.name) updates.name = data.name
-      if (data.email) updates.email = data.email
-      if (data.phone !== undefined) updates.phone = data.phone
-      await setDoc(userRef, updates, { merge: true })
-
-      const profileDoc = await getDoc(userRef)
-      const profile = profileDoc.data()
-      set((state) => ({
-        user: { ...state.user, name: data.name || state.user.name, email: data.email || state.user.email, phone: data.phone ?? state.user.phone },
-        userProfile: { ...state.userProfile, ...profile },
-      }))
-
+      const result = await http.put('/auth/update-profile', {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      })
+      const mapped = mapUser(result.user)
+      set({ user: mapped, userProfile: result.user })
       return { success: true }
     } catch (err) {
-      return { success: false, error: err.message }
+      return { success: false, error: err.error || err.message }
     }
   },
 
   updatePassword: async ({ currentPassword, newPassword }) => {
     try {
-      const fbUser = auth.currentUser
-      if (!fbUser) return { success: false, error: 'Not authenticated' }
-
-      const credential = EmailAuthProvider.credential(fbUser.email, currentPassword)
-      await reauthenticateWithCredential(fbUser, credential)
-      await fbUpdatePassword(fbUser, newPassword)
+      await http.put('/auth/update-password', {
+        currentPassword,
+        newPassword,
+      })
       return { success: true }
     } catch (err) {
-      const message = err.code === 'auth/wrong-password'
-        ? 'Current password is incorrect'
-        : err.message
-      return { success: false, error: message }
+      return { success: false, error: err.error || err.message }
     }
   },
 

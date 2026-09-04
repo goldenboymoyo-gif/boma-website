@@ -19,11 +19,19 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: 6,
     select: false,
   },
   phone: {
+    type: String,
+    trim: true,
+  },
+  provider: {
+    type: String,
+    enum: ['email', 'google', 'facebook'],
+    default: 'email',
+  },
+  firebaseUid: {
     type: String,
     trim: true,
   },
@@ -53,6 +61,7 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
 };
 

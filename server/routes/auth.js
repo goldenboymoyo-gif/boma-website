@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
+import { verifyIdToken } from '../config/firebaseAdmin.js';
 
 const router = Router();
 
@@ -113,6 +114,7 @@ router.get('/me', protect, async (req, res, next) => {
         role: user.role,
         isVerified: user.isVerified,
         avatar: user.avatar,
+        provider: user.provider,
         createdAt: user.createdAt,
       },
     });
@@ -120,6 +122,77 @@ router.get('/me', protect, async (req, res, next) => {
     next(error);
   }
 });
+
+// Social sign-in (Google/Facebook): the browser signs in with Firebase and
+// sends the resulting ID token here. We verify it, then create or fetch a
+// matching user in MongoDB and issue our own JWT.
+router.post(
+  '/social',
+  [
+    body('idToken').notEmpty().withMessage('ID token is required'),
+    body('provider').isIn(['google', 'facebook']).withMessage('Valid provider is required'),
+  ],
+  async (req, res, next) => {
+    try {
+      if (!validate(req, res)) return;
+
+      const { idToken, provider } = req.body;
+      let fbUser;
+      try {
+        fbUser = await verifyIdToken(idToken);
+      } catch {
+        return res.status(401).json({ success: false, error: 'Unable to verify social sign-in' });
+      }
+
+      const email = (fbUser.email || '').toLowerCase();
+      const name = fbUser.name || (fbUser.email ? fbUser.email.split('@')[0] : '');
+      const avatar = fbUser.picture || '';
+      const firebaseUid = fbUser.uid;
+
+      let user = await User.findOne({ firebaseUid });
+      if (!user && email) {
+        user = await User.findOne({ email });
+      }
+
+      if (!user) {
+        user = await User.create({
+          name,
+          email: email || `${firebaseUid}@social.local`,
+          password: undefined,
+          provider,
+          firebaseUid,
+          avatar,
+        });
+      } else {
+        user.provider = provider;
+        user.firebaseUid = firebaseUid;
+        if (avatar && !user.avatar) user.avatar = avatar;
+        if (name && !user.name) user.name = name;
+        await user.save();
+      }
+
+      const token = user.generateJwtToken();
+
+      res.json({
+        success: true,
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          isVerified: user.isVerified,
+          avatar: user.avatar,
+          provider: user.provider,
+          createdAt: user.createdAt,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.put(
   '/update-profile',
