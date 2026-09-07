@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Calendar, Tag } from 'lucide-react'
+import { ArrowLeft, Tag } from 'lucide-react'
 import FallbackImage from '../../components/FallbackImage'
 import { newsArticles } from '../../data/siteData'
 

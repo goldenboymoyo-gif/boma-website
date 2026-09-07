@@ -14,7 +14,6 @@ import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../components/SocialIc
 import { siteData } from '../data/siteData'
 import { contactAPI } from '../lib/api'
 import VideoHero from '../components/VideoHero'
-import SectionHeading from '../components/SectionHeading'
 import { useScrollReveal } from '../hooks/useAnimations'
 import { cn } from '../lib/utils'
 

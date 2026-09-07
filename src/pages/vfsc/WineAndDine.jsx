@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ChevronDown, ChevronUp, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import VideoHero from '../../components/VideoHero'
 import SectionHeading from '../../components/SectionHeading'
 import { useScrollReveal } from '../../hooks/useAnimations'
 import FallbackImage from '../../components/FallbackImage'
-import { cn } from '../../lib/utils'
 import { vfscData } from '../../data/vfscData'
 
 function HeroBanner() {
@@ -76,7 +75,7 @@ function DiningCard({ option, index }) {
 }
 
 function DiningList() {
-  const { ref, isInView } = useScrollReveal()
+  const { ref } = useScrollReveal()
   const data = vfscData.wineAndDine
 
   return (

@@ -1,11 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Butler';
-  src: url('/fonts/butler.woff2') format('woff2');
-  font-display: swap;
-}
-
 @theme {
   /* Neutral remap of the legacy boma-* aliases — lingers greys, no Booma colors.
      Accent values chosen to be crisp and legible against light #F7F7F7 sections. */

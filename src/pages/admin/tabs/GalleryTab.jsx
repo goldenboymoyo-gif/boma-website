@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { cn } from '../../../lib/utils'
 import { galleryAPI } from '../../../lib/api'
 import { Plus, Trash2, AlertCircle } from 'lucide-react'
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { cn } from '../../../lib/utils'
 import { newsAPI, eventsAPI, menuAPI, galleryAPI, messagesAPI } from '../../../lib/api'
 import {
-  LayoutDashboard, Newspaper, CalendarDays, UtensilsCrossed, Image,
+  Newspaper, CalendarDays, UtensilsCrossed, Image,
   Mail, ChevronRight, FileText,
 } from 'lucide-react'
 

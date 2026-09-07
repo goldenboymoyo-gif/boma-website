@@ -4,7 +4,6 @@ import { Search, ChevronDown, HelpCircle, MessageCircle, ArrowRight } from 'luci
 import { Link } from 'react-router-dom'
 import { faqs } from '../data/siteData'
 import VideoHero from '../components/VideoHero'
-import SectionHeading from '../components/SectionHeading'
 import { useScrollReveal } from '../hooks/useAnimations'
 import { cn } from '../lib/utils'
 

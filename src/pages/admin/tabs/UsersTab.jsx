@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { cn } from '../../../lib/utils'
 import { adminAPI } from '../../../lib/api'
-import { Search, Users } from 'lucide-react'
+import { Search } from 'lucide-react'
 
 const formatDate = (dateVal) => {
   if (!dateVal) return '—'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ChevronDown, ChevronUp, Phone, Mail, Download } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp, Phone, Mail } from 'lucide-react'
 import VideoHero from '../../components/VideoHero'
 import FallbackImage from '../../components/FallbackImage'
 import SectionHeading from '../../components/SectionHeading'

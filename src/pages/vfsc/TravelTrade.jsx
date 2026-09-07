@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mail, Phone, ExternalLink, Download, MapPin, Clock, Globe, Users, ChevronDown } from 'lucide-react'
+import { Mail, ExternalLink, Download, MapPin, Clock, Globe, Users, ChevronDown } from 'lucide-react'
 import { siteData, galleryImages } from '../../data/siteData'
 import VideoHero from '../../components/VideoHero'
 import FallbackImage from '../../components/FallbackImage'

@@ -12,11 +12,6 @@ import {
   ChevronRight,
   Menu,
   X,
-  Bell,
-  Edit2,
-  Camera,
-  Mail,
-  Phone,
   Lock,
   Eye,
   EyeOff,
@@ -68,7 +63,7 @@ export default function Dashboard() {
     email: '',
     phone: '',
   });
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [, setIsEditingProfile] = useState(false);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMsg, setProfileMsg] = useState('');
   const [showOldPassword, setShowOldPassword] = useState(false);

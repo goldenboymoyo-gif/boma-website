@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { contentAPI } from '../../../lib/api'
-import { Save, AlertCircle, FileText } from 'lucide-react'
+import { Save, AlertCircle } from 'lucide-react'
 
 const contentSections = [
   { key: 'hero', label: 'Hero Section', fields: [

@@ -45,7 +45,7 @@ export default function Footer() {
           ) : (
             <form
               className="flex flex-col sm:flex-row gap-3 w-full lg:max-w-md"
-              onSubmit={(e) => { e.preventDefault(); if (email.trim()) setSubscribed(true) }}
+              onSubmit={(e) => { e.preventDefault(); if (email.trim()) window.location.href = `mailto:reservations@theboma.co.zw?subject=Newsletter%20Subscription&body=Please%20add%20me%20to%20your%20newsletter%20list.%0A%0AEmail:%20${encodeURIComponent(email)}`; setSubscribed(true) }}
             >
               <input
                 type="email"

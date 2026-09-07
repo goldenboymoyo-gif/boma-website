@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '../../../lib/utils'
 import { newsAPI } from '../../../lib/api'
-import { Search, Plus, Trash2, Edit3, Save, AlertCircle, Newspaper } from 'lucide-react'
+import { Search, Plus, Trash2, Edit3, Save, AlertCircle } from 'lucide-react'
 
 const formatDate = (dateVal) => {
   if (!dateVal) return '—'

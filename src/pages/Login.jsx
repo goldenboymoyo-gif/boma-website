@@ -216,7 +216,7 @@ export default function Login() {
                 <span className="text-sm text-boma-charcoal">Remember me</span>
               </label>
               <Link
-                to="/forgot-password"
+                to="/contact"
                 className="text-sm text-boma-rust hover:text-boma-rust/80 font-medium"
               >
                 Forgot Password?

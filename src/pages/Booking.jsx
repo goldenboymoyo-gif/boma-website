@@ -1,8 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { bookingsAPI } from '../lib/api';
 import useAuthStore from '../store/authStore';
@@ -21,8 +20,6 @@ import {
   Utensils,
   Heart,
   Info,
-  Star,
-  CheckCircle2,
   X,
   Mail,
   Lock,
@@ -76,14 +73,14 @@ const monthNames = [
 ];
 
 export default function Booking() {
-  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const login = useAuthStore((s) => s.login);
   const registerUser = useAuthStore((s) => s.register);
+  const socialLogin = useAuthStore((s) => s.socialLogin);
   const clearError = useAuthStore((s) => s.clearError);
   const authError = useAuthStore((s) => s.error);
 
-  const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm({
+  const { register, watch, setValue, trigger, formState: { errors } } = useForm({
     defaultValues: {
       adults: 2,
       children: 0,
@@ -110,6 +107,7 @@ export default function Booking() {
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [authModalError, setAuthModalError] = useState('');
   const [showAuthPassword, setShowAuthPassword] = useState(false);
+  const [socialLoading, setSocialLoading] = useState('');
 
   const watched = watch();
   const calendarDays = generateCalendarDays(calendarYear, calendarMonth);
@@ -152,6 +150,19 @@ export default function Booking() {
     if (currentStep > 1) {
       setDirection(-1);
       setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const handleSocial = async (provider) => {
+    setAuthModalError('');
+    clearError();
+    setSocialLoading(provider);
+    const result = await socialLogin(provider);
+    setSocialLoading('');
+    if (result.success) {
+      setShowAuthModal(false);
+    } else if (result.error) {
+      setAuthModalError(result.error);
     }
   };
 
@@ -1073,38 +1084,28 @@ export default function Booking() {
               <div className="grid grid-cols-2 gap-3 px-6 pt-4">
                 <button
                   type="button"
-                  onClick={() => toast.custom((t) => (
-                    <div className={cn('flex items-center gap-3 px-5 py-3.5 bg-white rounded-lg shadow-lg border border-boma-charcoal/10', t.visible ? 'animate-enter' : 'animate-leave')}>
-                      <div className="w-8 h-8 rounded-full bg-boma-rust/10 flex items-center justify-center shrink-0">
-                        <Globe className="w-4 h-4 text-boma-rust" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-boma-charcoal">Coming soon</p>
-                        <p className="text-xs text-boma-charcoal/60">Google sign-in will be available shortly</p>
-                      </div>
-                    </div>
-                  ))}
-                  className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-boma-charcoal/5 transition-colors cursor-pointer"
+                  disabled={socialLoading === 'google'}
+                  onClick={() => handleSocial('google')}
+                  className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Globe className="w-5 h-5" />
+                  {socialLoading === 'google' ? (
+                    <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+                  ) : (
+                    <Globe className="w-5 h-5" />
+                  )}
                   Google
                 </button>
                 <button
                   type="button"
-                  onClick={() => toast.custom((t) => (
-                    <div className={cn('flex items-center gap-3 px-5 py-3.5 bg-white rounded-lg shadow-lg border border-boma-charcoal/10', t.visible ? 'animate-enter' : 'animate-leave')}>
-                      <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                        <FacebookIcon className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-boma-charcoal">Coming soon</p>
-                        <p className="text-xs text-boma-charcoal/60">Facebook sign-in will be available shortly</p>
-                      </div>
-                    </div>
-                  ))}
-                  className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-boma-charcoal/5 transition-colors cursor-pointer"
+                  disabled={socialLoading === 'facebook'}
+                  onClick={() => handleSocial('facebook')}
+                  className="flex items-center justify-center gap-2 py-3 border border-boma-charcoal/20 rounded-xl text-sm font-medium text-boma-charcoal hover:bg-white transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <FacebookIcon className="w-5 h-5 text-blue-600" />
+                  {socialLoading === 'facebook' ? (
+                    <div className="w-4 h-4 border-2 border-boma-charcoal/30 border-t-boma-charcoal rounded-full animate-spin" />
+                  ) : (
+                    <FacebookIcon className="w-5 h-5 text-blue-600" />
+                  )}
                   Facebook
                 </button>
               </div>

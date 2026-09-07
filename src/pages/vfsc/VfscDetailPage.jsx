@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
-import { Phone, Mail, Download, ChevronRight, ArrowRight, Check, Calendar, MapPin, MessageCircle } from 'lucide-react'
+import { Phone, Mail, Download, ChevronRight, ArrowRight, Check, MessageCircle } from 'lucide-react'
 import SectionHeading from '../../components/SectionHeading'
 import { useScrollReveal } from '../../hooks/useAnimations'
 import FallbackImage from '../../components/FallbackImage'
-import { cn } from '../../lib/utils'
-import { vfscData, CDN } from '../../data/vfscData'
+import { vfscData } from '../../data/vfscData'
 
 function HeroSection({ data }) {
   const { ref, isInView } = useScrollReveal(0.1)

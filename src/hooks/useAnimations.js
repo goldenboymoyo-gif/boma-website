@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useInView } from 'framer-motion'
 
 export function useScrollReveal(threshold = 0.2) {
   const ref = useRef(null)

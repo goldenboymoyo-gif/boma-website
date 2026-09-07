@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Heart } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import VideoHero from '../../components/VideoHero'
 import FallbackImage from '../../components/FallbackImage'
 import SectionHeading from '../../components/SectionHeading'
@@ -129,7 +129,7 @@ export default function AboutUs() {
             We are committed to sustainable tourism that supports local communities and preserves the natural environment. Through initiatives like Pack for a Purpose, the Victoria Falls Anti-Poaching Unit, and our vulture conservation programmes, we strive to leave a positive legacy for future generations.
           </p>
           <Link
-            to="/about-us/community-and-environment"
+            to="/about-us"
             className="inline-flex items-center gap-2 px-6 py-3 border border-boma-rust text-boma-rust hover:bg-boma-rust hover:text-white text-sm font-semibold uppercase tracking-wider transition-all"
           >
             Our Commitment

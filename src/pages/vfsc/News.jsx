@@ -68,7 +68,7 @@ export default function News() {
 
             {/* Newsletter Signup */}
             <div className="lg:w-1/3">
-              <div className="bg-boma-sand/40 p-6">
+              <div className="bg-boma-beige/40 p-6">
                 <h2 className="text-xs uppercase tracking-[0.2em] text-boma-charcoal/60 mb-3">{newsletterSignup.heading}</h2>
                 <p className="text-sm text-boma-charcoal/60 mb-5 leading-relaxed">{newsletterSignup.description}</p>
 

@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/fonts/(.*)", "destination": "/fonts/$1" },
+    { "source": "/logos/(.*)", "destination": "/logos/$1" },
+    { "source": "/social/(.*)", "destination": "/social/$1" },
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/sitemap-0.xml", "destination": "/sitemap-0.xml" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

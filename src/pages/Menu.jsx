@@ -6,7 +6,6 @@ import SectionHeading from '../components/SectionHeading'
 import QuoteBreak from '../components/QuoteBreak'
 import { useScrollReveal } from '../hooks/useAnimations'
 import { cn } from '../lib/utils'
-import { Link } from 'react-router-dom'
 
 const menuSections = [
   { key: 'starters', ...menuItems.starters },

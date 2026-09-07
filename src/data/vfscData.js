@@ -954,7 +954,7 @@ export const vfscData = {
         name: 'Community & Environment',
         description: "We're committed to sustainable tourism, supporting local communities and preserving the environment.",
         thumbnail: `${CDN}/media/3rkngwi4/victoria-falls-safari-lodge-2025-06-10t135056751.png`,
-        path: '/about-us/community-and-environment',
+        path: '/about-us',
       },
       {
         name: 'Meet The Team',

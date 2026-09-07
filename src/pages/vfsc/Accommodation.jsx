@@ -6,7 +6,6 @@ import VideoHero from '../../components/VideoHero'
 import SectionHeading from '../../components/SectionHeading'
 import { useScrollReveal } from '../../hooks/useAnimations'
 import FallbackImage from '../../components/FallbackImage'
-import { cn } from '../../lib/utils'
 import { vfscData } from '../../data/vfscData'
 
 function HeroBanner() {
@@ -87,7 +86,7 @@ function AccommodationCard({ option, index }) {
 }
 
 function AccommodationList() {
-  const { ref, isInView } = useScrollReveal()
+  const { ref } = useScrollReveal()
   const data = vfscData.accommodation
 
   return (
