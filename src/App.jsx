@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lazy, Suspense, useEffect, useRef } from 'react'
 import Lenis from 'lenis'
@@ -21,6 +21,7 @@ const Booking = lazy(() => import('./pages/Booking'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
 
 // VFSC Pages
@@ -34,6 +35,7 @@ const AboutUs = lazy(() => import('./pages/vfsc/AboutUs'))
 const News = lazy(() => import('./pages/vfsc/News'))
 const NewsArticle = lazy(() => import('./pages/vfsc/NewsArticle'))
 const TravelTrade = lazy(() => import('./pages/vfsc/TravelTrade'))
+const AboutUsDetail = lazy(() => import('./pages/vfsc/AboutUsDetail'))
 
 const queryClient = new QueryClient()
 
@@ -41,7 +43,8 @@ function AppContent() {
   const location = useLocation()
   const isDashboard = location.pathname.startsWith('/login') ||
     location.pathname.startsWith('/register') ||
-    location.pathname.startsWith('/admin')
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/dashboard')
   const showQuickRequest = !isDashboard && location.pathname !== '/booking'
 
   return (
@@ -58,9 +61,12 @@ function AppContent() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
+            <Route path="/wellness" element={<Navigate to="/activities" replace />} />
 
             {/* VFSC Routes */}
             <Route path="/accommodation" element={<Accommodation />} />
@@ -73,6 +79,7 @@ function AppContent() {
             <Route path="/wine-and-dine/buffalo-bar" element={<VfscDetailPage dataKey="buffaloBar" />} />
             <Route path="/wine-and-dine/makuwa-kuwa-restaurant" element={<VfscDetailPage dataKey="makuwaKuwa" />} />
             <Route path="/wine-and-dine/the-boma-cafe" element={<VfscDetailPage dataKey="bomaCafe" />} />
+            <Route path="/wine-and-dine/the-boma-dinner-drum-show" element={<Experience />} />
 
             <Route path="/functions-and-events" element={<FunctionsAndEvents />} />
             <Route path="/functions-and-events/conferences" element={<VfscDetailPage dataKey="conferences" />} />
@@ -83,6 +90,9 @@ function AppContent() {
             <Route path="/activities" element={<Activities />} />
             <Route path="/activities/:slug" element={<ActivityDetail />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/about-us/awards" element={<AboutUsDetail dataKey="awards" />} />
+            <Route path="/about-us/meet-the-team" element={<AboutUsDetail dataKey="meet-the-team" />} />
+            <Route path="/about-us/affiliations" element={<AboutUsDetail dataKey="affiliations" />} />
             <Route path="/news" element={<News />} />
             <Route path="/news/:slug" element={<NewsArticle />} />
             <Route path="/travel-trade" element={<TravelTrade />} />

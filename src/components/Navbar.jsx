@@ -188,6 +188,10 @@ export default function Navbar() {
                         Admin Panel
                       </Link>
                     )}
+                    <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-boma-charcoal hover:bg-page-bg transition-colors">
+                      <User className="w-4 h-4" />
+                      My Dashboard
+                    </Link>
                     <button
                       onClick={() => { handleLogout(); }}
                       className="flex items-center gap-2 px-4 py-2.5 font-sans text-sm text-red-500 hover:bg-red-50 transition-colors w-full"
